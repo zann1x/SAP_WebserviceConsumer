@@ -43,16 +43,20 @@ Partial Class MainWindow
         Me.LblPostcodeCity = New System.Windows.Forms.Label()
         Me.TbStreet = New System.Windows.Forms.TextBox()
         Me.LblStreetHouseno = New System.Windows.Forms.Label()
-        Me.DtpValidTo = New System.Windows.Forms.DateTimePicker()
-        Me.LblValidTo = New System.Windows.Forms.Label()
-        Me.DtpValidFrom = New System.Windows.Forms.DateTimePicker()
-        Me.LblValidFrom = New System.Windows.Forms.Label()
+        Me.DtpBusEntityValidTo = New System.Windows.Forms.DateTimePicker()
+        Me.LblBusEntityValidTo = New System.Windows.Forms.Label()
+        Me.DtpBusEntityValidFrom = New System.Windows.Forms.DateTimePicker()
+        Me.LblBusEntityValidFrom = New System.Windows.Forms.Label()
         Me.TpReferenceFactors = New System.Windows.Forms.TabPage()
         Me.CombTenancyLaw = New System.Windows.Forms.ComboBox()
         Me.LblTenancyLaw = New System.Windows.Forms.Label()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.TpPostingParameters = New System.Windows.Forms.TabPage()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.LblTermOrgAssignmentValidFrom = New System.Windows.Forms.Label()
+        Me.TbTermOrgAssignmentNumber = New System.Windows.Forms.TextBox()
+        Me.LblTermOrgAssignmentNumber = New System.Windows.Forms.Label()
         Me.TbBusinessArea = New System.Windows.Forms.TextBox()
         Me.LblBusinessArea = New System.Windows.Forms.Label()
         Me.LblProfitcenter = New System.Windows.Forms.Label()
@@ -68,6 +72,8 @@ Partial Class MainWindow
         Me.TbCompanyCodeList = New System.Windows.Forms.TextBox()
         Me.Splitter1 = New System.Windows.Forms.Splitter()
         Me.LblMandatoryFields = New System.Windows.Forms.Label()
+        Me.DtpTermOrgAssignmentValidFrom = New System.Windows.Forms.DateTimePicker()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TpGeneralData.SuspendLayout()
         Me.TpReferenceFactors.SuspendLayout()
@@ -182,10 +188,10 @@ Partial Class MainWindow
         Me.TpGeneralData.Controls.Add(Me.LblPostcodeCity)
         Me.TpGeneralData.Controls.Add(Me.TbStreet)
         Me.TpGeneralData.Controls.Add(Me.LblStreetHouseno)
-        Me.TpGeneralData.Controls.Add(Me.DtpValidTo)
-        Me.TpGeneralData.Controls.Add(Me.LblValidTo)
-        Me.TpGeneralData.Controls.Add(Me.DtpValidFrom)
-        Me.TpGeneralData.Controls.Add(Me.LblValidFrom)
+        Me.TpGeneralData.Controls.Add(Me.DtpBusEntityValidTo)
+        Me.TpGeneralData.Controls.Add(Me.LblBusEntityValidTo)
+        Me.TpGeneralData.Controls.Add(Me.DtpBusEntityValidFrom)
+        Me.TpGeneralData.Controls.Add(Me.LblBusEntityValidFrom)
         Me.TpGeneralData.Location = New System.Drawing.Point(4, 22)
         Me.TpGeneralData.Name = "TpGeneralData"
         Me.TpGeneralData.Padding = New System.Windows.Forms.Padding(3)
@@ -279,41 +285,41 @@ Partial Class MainWindow
         Me.LblStreetHouseno.TabIndex = 4
         Me.LblStreetHouseno.Text = "Straße/Hausnr."
         '
-        'DtpValidTo
+        'DtpBusEntityValidTo
         '
-        Me.DtpValidTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DtpValidTo.Location = New System.Drawing.Point(245, 6)
-        Me.DtpValidTo.Name = "DtpValidTo"
-        Me.DtpValidTo.Size = New System.Drawing.Size(95, 20)
-        Me.DtpValidTo.TabIndex = 3
-        Me.DtpValidTo.Value = New Date(9998, 12, 31, 0, 0, 0, 0)
+        Me.DtpBusEntityValidTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.DtpBusEntityValidTo.Location = New System.Drawing.Point(245, 6)
+        Me.DtpBusEntityValidTo.Name = "DtpBusEntityValidTo"
+        Me.DtpBusEntityValidTo.Size = New System.Drawing.Size(95, 20)
+        Me.DtpBusEntityValidTo.TabIndex = 3
+        Me.DtpBusEntityValidTo.Value = New Date(9998, 12, 31, 0, 0, 0, 0)
         '
-        'LblValidTo
+        'LblBusEntityValidTo
         '
-        Me.LblValidTo.AutoSize = True
-        Me.LblValidTo.Location = New System.Drawing.Point(218, 12)
-        Me.LblValidTo.Name = "LblValidTo"
-        Me.LblValidTo.Size = New System.Drawing.Size(21, 13)
-        Me.LblValidTo.TabIndex = 2
-        Me.LblValidTo.Text = "Bis"
+        Me.LblBusEntityValidTo.AutoSize = True
+        Me.LblBusEntityValidTo.Location = New System.Drawing.Point(218, 12)
+        Me.LblBusEntityValidTo.Name = "LblBusEntityValidTo"
+        Me.LblBusEntityValidTo.Size = New System.Drawing.Size(21, 13)
+        Me.LblBusEntityValidTo.TabIndex = 2
+        Me.LblBusEntityValidTo.Text = "Bis"
         '
-        'DtpValidFrom
+        'DtpBusEntityValidFrom
         '
-        Me.DtpValidFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DtpValidFrom.Location = New System.Drawing.Point(106, 6)
-        Me.DtpValidFrom.Name = "DtpValidFrom"
-        Me.DtpValidFrom.Size = New System.Drawing.Size(95, 20)
-        Me.DtpValidFrom.TabIndex = 1
-        Me.DtpValidFrom.Value = New Date(2018, 10, 18, 0, 0, 0, 0)
+        Me.DtpBusEntityValidFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.DtpBusEntityValidFrom.Location = New System.Drawing.Point(106, 6)
+        Me.DtpBusEntityValidFrom.Name = "DtpBusEntityValidFrom"
+        Me.DtpBusEntityValidFrom.Size = New System.Drawing.Size(95, 20)
+        Me.DtpBusEntityValidFrom.TabIndex = 1
+        Me.DtpBusEntityValidFrom.Value = New Date(2018, 1, 1, 0, 0, 0, 0)
         '
-        'LblValidFrom
+        'LblBusEntityValidFrom
         '
-        Me.LblValidFrom.AutoSize = True
-        Me.LblValidFrom.Location = New System.Drawing.Point(6, 12)
-        Me.LblValidFrom.Name = "LblValidFrom"
-        Me.LblValidFrom.Size = New System.Drawing.Size(49, 13)
-        Me.LblValidFrom.TabIndex = 0
-        Me.LblValidFrom.Text = "Gültig ab"
+        Me.LblBusEntityValidFrom.AutoSize = True
+        Me.LblBusEntityValidFrom.Location = New System.Drawing.Point(6, 12)
+        Me.LblBusEntityValidFrom.Name = "LblBusEntityValidFrom"
+        Me.LblBusEntityValidFrom.Size = New System.Drawing.Size(49, 13)
+        Me.LblBusEntityValidFrom.TabIndex = 0
+        Me.LblBusEntityValidFrom.Text = "Gültig ab"
         '
         'TpReferenceFactors
         '
@@ -368,6 +374,12 @@ Partial Class MainWindow
         'TpPostingParameters
         '
         Me.TpPostingParameters.BackColor = System.Drawing.Color.White
+        Me.TpPostingParameters.Controls.Add(Me.Label1)
+        Me.TpPostingParameters.Controls.Add(Me.DtpTermOrgAssignmentValidFrom)
+        Me.TpPostingParameters.Controls.Add(Me.Label2)
+        Me.TpPostingParameters.Controls.Add(Me.LblTermOrgAssignmentValidFrom)
+        Me.TpPostingParameters.Controls.Add(Me.TbTermOrgAssignmentNumber)
+        Me.TpPostingParameters.Controls.Add(Me.LblTermOrgAssignmentNumber)
         Me.TpPostingParameters.Controls.Add(Me.TbBusinessArea)
         Me.TpPostingParameters.Controls.Add(Me.LblBusinessArea)
         Me.TpPostingParameters.Controls.Add(Me.LblProfitcenter)
@@ -379,9 +391,45 @@ Partial Class MainWindow
         Me.TpPostingParameters.TabIndex = 5
         Me.TpPostingParameters.Text = "Buchungsparameter"
         '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(220, 56)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(98, 13)
+        Me.Label2.TabIndex = 7
+        Me.Label2.Text = "(9100 = Immobilien)"
+        '
+        'LblTermOrgAssignmentValidFrom
+        '
+        Me.LblTermOrgAssignmentValidFrom.AutoSize = True
+        Me.LblTermOrgAssignmentValidFrom.Location = New System.Drawing.Point(6, 33)
+        Me.LblTermOrgAssignmentValidFrom.Name = "LblTermOrgAssignmentValidFrom"
+        Me.LblTermOrgAssignmentValidFrom.Size = New System.Drawing.Size(55, 13)
+        Me.LblTermOrgAssignmentValidFrom.TabIndex = 6
+        Me.LblTermOrgAssignmentValidFrom.Text = "Gültig von"
+        '
+        'TbTermOrgAssignmentNumber
+        '
+        Me.TbTermOrgAssignmentNumber.Location = New System.Drawing.Point(114, 5)
+        Me.TbTermOrgAssignmentNumber.MaxLength = 4
+        Me.TbTermOrgAssignmentNumber.Name = "TbTermOrgAssignmentNumber"
+        Me.TbTermOrgAssignmentNumber.ReadOnly = True
+        Me.TbTermOrgAssignmentNumber.Size = New System.Drawing.Size(38, 20)
+        Me.TbTermOrgAssignmentNumber.TabIndex = 5
+        '
+        'LblTermOrgAssignmentNumber
+        '
+        Me.LblTermOrgAssignmentNumber.AutoSize = True
+        Me.LblTermOrgAssignmentNumber.Location = New System.Drawing.Point(6, 8)
+        Me.LblTermOrgAssignmentNumber.Name = "LblTermOrgAssignmentNumber"
+        Me.LblTermOrgAssignmentNumber.Size = New System.Drawing.Size(101, 13)
+        Me.LblTermOrgAssignmentNumber.TabIndex = 4
+        Me.LblTermOrgAssignmentNumber.Text = "Nummer der Klausel"
+        '
         'TbBusinessArea
         '
-        Me.TbBusinessArea.Location = New System.Drawing.Point(99, 6)
+        Me.TbBusinessArea.Location = New System.Drawing.Point(114, 56)
         Me.TbBusinessArea.MaxLength = 4
         Me.TbBusinessArea.Name = "TbBusinessArea"
         Me.TbBusinessArea.Size = New System.Drawing.Size(38, 20)
@@ -391,16 +439,16 @@ Partial Class MainWindow
         'LblBusinessArea
         '
         Me.LblBusinessArea.AutoSize = True
-        Me.LblBusinessArea.Location = New System.Drawing.Point(6, 9)
+        Me.LblBusinessArea.Location = New System.Drawing.Point(6, 59)
         Me.LblBusinessArea.Name = "LblBusinessArea"
-        Me.LblBusinessArea.Size = New System.Drawing.Size(74, 13)
+        Me.LblBusinessArea.Size = New System.Drawing.Size(90, 13)
         Me.LblBusinessArea.TabIndex = 2
-        Me.LblBusinessArea.Text = "GeschBereich"
+        Me.LblBusinessArea.Text = "Geschäftsbereich"
         '
         'LblProfitcenter
         '
         Me.LblProfitcenter.AutoSize = True
-        Me.LblProfitcenter.Location = New System.Drawing.Point(6, 35)
+        Me.LblProfitcenter.Location = New System.Drawing.Point(6, 85)
         Me.LblProfitcenter.Name = "LblProfitcenter"
         Me.LblProfitcenter.Size = New System.Drawing.Size(61, 13)
         Me.LblProfitcenter.TabIndex = 1
@@ -408,11 +456,12 @@ Partial Class MainWindow
         '
         'TbProfitCenter
         '
-        Me.TbProfitCenter.Location = New System.Drawing.Point(99, 32)
+        Me.TbProfitCenter.Location = New System.Drawing.Point(114, 82)
         Me.TbProfitCenter.MaxLength = 10
         Me.TbProfitCenter.Name = "TbProfitCenter"
         Me.TbProfitCenter.Size = New System.Drawing.Size(100, 20)
         Me.TbProfitCenter.TabIndex = 0
+        Me.TbProfitCenter.Text = "N999"
         '
         'TabPage7
         '
@@ -513,11 +562,32 @@ Partial Class MainWindow
         'LblMandatoryFields
         '
         Me.LblMandatoryFields.AutoSize = True
+        Me.LblMandatoryFields.BackColor = System.Drawing.SystemColors.Control
+        Me.LblMandatoryFields.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.LblMandatoryFields.Location = New System.Drawing.Point(698, 6)
         Me.LblMandatoryFields.Name = "LblMandatoryFields"
-        Me.LblMandatoryFields.Size = New System.Drawing.Size(90, 13)
+        Me.LblMandatoryFields.Size = New System.Drawing.Size(92, 15)
         Me.LblMandatoryFields.TabIndex = 19
         Me.LblMandatoryFields.Text = "* mandatory fields"
+        '
+        'DtpTermOrgAssignmentValidFrom
+        '
+        Me.DtpTermOrgAssignmentValidFrom.Enabled = False
+        Me.DtpTermOrgAssignmentValidFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.DtpTermOrgAssignmentValidFrom.Location = New System.Drawing.Point(114, 30)
+        Me.DtpTermOrgAssignmentValidFrom.Name = "DtpTermOrgAssignmentValidFrom"
+        Me.DtpTermOrgAssignmentValidFrom.Size = New System.Drawing.Size(95, 20)
+        Me.DtpTermOrgAssignmentValidFrom.TabIndex = 8
+        Me.DtpTermOrgAssignmentValidFrom.Value = New Date(2018, 1, 1, 0, 0, 0, 0)
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(220, 85)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(247, 13)
+        Me.Label1.TabIndex = 9
+        Me.Label1.Text = "(N999 = Dummy für nicht zugeordnete Buchungen)"
         '
         'MainWindow
         '
@@ -580,10 +650,10 @@ Partial Class MainWindow
     Friend WithEvents BtnRefreshList As Button
     Friend WithEvents CombTenancyLaw As ComboBox
     Friend WithEvents LblTenancyLaw As Label
-    Friend WithEvents LblValidFrom As Label
-    Friend WithEvents DtpValidFrom As DateTimePicker
-    Friend WithEvents DtpValidTo As DateTimePicker
-    Friend WithEvents LblValidTo As Label
+    Friend WithEvents LblBusEntityValidFrom As Label
+    Friend WithEvents DtpBusEntityValidFrom As DateTimePicker
+    Friend WithEvents DtpBusEntityValidTo As DateTimePicker
+    Friend WithEvents LblBusEntityValidTo As Label
     Friend WithEvents TbPostcode As TextBox
     Friend WithEvents LblCountry As Label
     Friend WithEvents LblPostcodeCity As Label
@@ -601,4 +671,10 @@ Partial Class MainWindow
     Friend WithEvents LblBusinessArea As Label
     Friend WithEvents Splitter1 As Splitter
     Friend WithEvents LblMandatoryFields As Label
+    Friend WithEvents TbTermOrgAssignmentNumber As TextBox
+    Friend WithEvents LblTermOrgAssignmentNumber As Label
+    Friend WithEvents LblTermOrgAssignmentValidFrom As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents DtpTermOrgAssignmentValidFrom As DateTimePicker
+    Friend WithEvents Label1 As Label
 End Class
