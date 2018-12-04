@@ -1,0 +1,1644 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:n1="urn:sap-com:document:sap:rfc:functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation>
+    <sidl:sidl xmlns:sidl="http://www.sap.com/2007/03/sidl" />
+  </wsdl:documentation>
+  <wsp:UsingPolicy wsdl:required="true" />
+  <wsp:Policy wsu:Id="BN_BN_Z_HH_BUSINESSENTITYREFX">
+    <saptrnbnd:OptimizedXMLTransfer uri="http://xml.sap.com/2006/11/esi/esp/binxml" xmlns:saptrnbnd="http://www.sap.com/webas/710/soap/features/transportbinding/" wsp:Optional="true" />
+    <saptrnbnd:OptimizedXMLTransfer uri="http://www.w3.org/2004/08/soap/features/http-optimization" xmlns:saptrnbnd="http://www.sap.com/webas/710/soap/features/transportbinding/" wsp:Optional="true" />
+    <wsp:ExactlyOne xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+      <wsp:All>
+        <sp:TransportBinding xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:sapsp="http://www.sap.com/webas/630/soap/features/security/policy" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:wst="http://docs.oasis-open.org/ws-sx/ws-trust/200512" xmlns:wsu="http://schemas.xmlsoap.org/ws/2002/07/utility" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken>
+                  <wsp:Policy>
+                    <sp:HttpBasicAuthentication />
+                  </wsp:Policy>
+                </sp:HttpsToken>
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:TripleDesRsa15 />
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Strict />
+              </wsp:Policy>
+            </sp:Layout>
+          </wsp:Policy>
+        </sp:TransportBinding>
+      </wsp:All>
+    </wsp:ExactlyOne>
+    <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+      <sapsession:SessionMethod>httpCookies</sapsession:SessionMethod>
+    </sapsession:Session>
+    <sapattahnd:Enabled xmlns:sapattahnd="http://www.sap.com/710/features/attachment/">false</sapattahnd:Enabled>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="IF_IF_Z_HH_BusinessEntityREFX">
+    <sapsession:Session xmlns:sapsession="http://www.sap.com/webas/630/soap/features/session/">
+      <sapsession:enableSession>true</sapsession:enableSession>
+    </sapsession:Session>
+    <sapcentraladmin:CentralAdministration xmlns:sapcentraladmin="http://www.sap.com/webas/700/soap/features/CentralAdministration/" wsp:Optional="true" />
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="OP_IF_OP_BapiServiceTransactionRollback">
+    <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">DoRollback</sapcomhnd:enableCommit>
+    <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+    <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+    <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="OP_IF_OP_BapiServiceTransactionCommit">
+    <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">DoCommit</sapcomhnd:enableCommit>
+    <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+    <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+    <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="OP_IF_OP_BusinessEntityREFXGetList">
+    <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+    <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+    <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+    <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="OP_IF_OP_BusinessEntityREFXGetDetail">
+    <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+    <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+    <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+    <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="OP_IF_OP_BusinessEntityREFXCreate">
+    <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+    <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+    <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+    <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="OP_IF_OP_BusinessEntityREFXChange">
+    <sapcomhnd:enableCommit xmlns:sapcomhnd="http://www.sap.com/NW05/soap/features/commit/">false</sapcomhnd:enableCommit>
+    <sapblock:enableBlocking xmlns:sapblock="http://www.sap.com/NW05/soap/features/blocking/">true</sapblock:enableBlocking>
+    <saptrhnw05:required xmlns:saptrhnw05="http://www.sap.com/NW05/soap/features/transaction/">no</saptrhnw05:required>
+    <saprmnw05:enableWSRM xmlns:saprmnw05="http://www.sap.com/NW05/soap/features/wsrm/">false</saprmnw05:enableWSRM>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:rfc:functions">
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char100">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="100" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char12">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="12" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char15">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="15" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char20">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="20" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char220">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="220" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char24">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="24" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char240">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="240" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char30">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="30" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char32">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="32" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char35">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="35" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char40">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="40" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char45">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="45" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char50">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="50" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char6">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="6" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char60">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="60" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char8">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="8" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char80">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="80" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="cuky5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="curr15.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="15" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal10.0">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="10" />
+          <xsd:fractionDigits value="0" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal16.0">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="16" />
+          <xsd:fractionDigits value="0" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal23.4">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="23" />
+          <xsd:fractionDigits value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal5.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="5" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal6.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="6" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal9.3">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="9" />
+          <xsd:fractionDigits value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal9.6">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="9" />
+          <xsd:fractionDigits value="6" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="lang">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="numeric2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
+          <xsd:pattern value="\d*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="numeric3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+          <xsd:pattern value="\d*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="numeric4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+          <xsd:pattern value="\d*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="numeric5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+          <xsd:pattern value="\d*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="numeric6">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="6" />
+          <xsd:pattern value="\d*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="quantum14.4">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="14" />
+          <xsd:fractionDigits value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="quantum17.4">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="17" />
+          <xsd:fractionDigits value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="quantum8.4">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="8" />
+          <xsd:fractionDigits value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="time">
+        <xsd:restriction base="xsd:time">
+          <xsd:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="unit3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:schema>
+    <xsd:schema xmlns:n0="urn:sap-com:document:sap:rfc:functions" attributeFormDefault="qualified" targetNamespace="urn:sap-com:document:sap:soap:functions:mc-style">
+      <xsd:import namespace="urn:sap-com:document:sap:rfc:functions" />
+      <xsd:complexType name="ReArchRelDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="ArchObjectType" type="n0:char2" />
+          <xsd:element name="ArchObjectId" type="n0:char45" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="IsPartial" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReArchRelmsDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="ArchObjectType" type="n0:char2" />
+          <xsd:element name="ArchObjectId" type="n0:char45" />
+          <xsd:element name="Measurement" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ValuePart" type="n0:quantum17.4" />
+          <xsd:element name="ValueFull" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReBusEntityDat">
+        <xsd:sequence>
+          <xsd:element name="BusinessEntityText" type="n0:char60" />
+          <xsd:element name="MaintenanceArea" type="n0:numeric5" />
+          <xsd:element name="TransportConnection" type="n0:char1" />
+          <xsd:element name="Location" type="n0:numeric4" />
+          <xsd:element name="DistrictLocation" type="n0:numeric2" />
+          <xsd:element name="RegionalLocation" type="n0:char10" />
+          <xsd:element name="ReprListOfRents" type="n0:char6" />
+          <xsd:element name="UnitArea" type="n0:unit3" />
+          <xsd:element name="UnitAreaIso" type="n0:char3" />
+          <xsd:element name="UnitVolume" type="n0:unit3" />
+          <xsd:element name="UnitVolumeIso" type="n0:char3" />
+          <xsd:element name="UnitLength" type="n0:unit3" />
+          <xsd:element name="UnitLengthIso" type="n0:char3" />
+          <xsd:element name="TenancyLaw" type="n0:char5" />
+          <xsd:element name="PredefOperationCosts" type="n0:char4" />
+          <xsd:element name="PredefHeatingExpenses" type="n0:char4" />
+          <xsd:element name="AuthorizationGroup" type="n0:char40" />
+          <xsd:element name="AutoFuncLocDisabled" type="n0:char1" />
+          <xsd:element name="ObjectValidFrom" type="n0:date10" />
+          <xsd:element name="ObjectValidTo" type="n0:date10" />
+          <xsd:element name="Responsible" type="n0:char12" />
+          <xsd:element name="StatProf" type="n0:char8" />
+          <xsd:element name="Neighborhood01" type="n0:char30" />
+          <xsd:element name="Neighborhood02" type="n0:char30" />
+          <xsd:element name="Neighborhood03" type="n0:char30" />
+          <xsd:element name="MandateObjectId" type="n0:char45" />
+          <xsd:element name="MandateMngObjectId" type="n0:char45" />
+          <xsd:element name="MandateCrObjectId" type="n0:char45" />
+          <xsd:element name="Function" type="n0:char4" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReBusEntityDatx">
+        <xsd:sequence>
+          <xsd:element name="SetAll" type="n0:char1" />
+          <xsd:element name="BusinessEntityText" type="n0:char1" />
+          <xsd:element name="MaintenanceArea" type="n0:char1" />
+          <xsd:element name="TransportConnection" type="n0:char1" />
+          <xsd:element name="Location" type="n0:char1" />
+          <xsd:element name="DistrictLocation" type="n0:char1" />
+          <xsd:element name="RegionalLocation" type="n0:char1" />
+          <xsd:element name="ReprListOfRents" type="n0:char1" />
+          <xsd:element name="UnitArea" type="n0:char1" />
+          <xsd:element name="UnitVolume" type="n0:char1" />
+          <xsd:element name="UnitLength" type="n0:char1" />
+          <xsd:element name="TenancyLaw" type="n0:char1" />
+          <xsd:element name="PredefOperationCosts" type="n0:char1" />
+          <xsd:element name="PredefHeatingExpenses" type="n0:char1" />
+          <xsd:element name="AuthorizationGroup" type="n0:char1" />
+          <xsd:element name="AutoFuncLocDisabled" type="n0:char1" />
+          <xsd:element name="ObjectValidFrom" type="n0:char1" />
+          <xsd:element name="ObjectValidTo" type="n0:char1" />
+          <xsd:element name="Responsible" type="n0:char1" />
+          <xsd:element name="StatProf" type="n0:char1" />
+          <xsd:element name="Neighborhood01" type="n0:char1" />
+          <xsd:element name="Neighborhood02" type="n0:char1" />
+          <xsd:element name="Neighborhood03" type="n0:char1" />
+          <xsd:element name="MandateObjectId" type="n0:char1" />
+          <xsd:element name="MandateMngObjectId" type="n0:char1" />
+          <xsd:element name="MandateCrObjectId" type="n0:char1" />
+          <xsd:element name="Function" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReCosettleParDat">
+        <xsd:sequence>
+          <xsd:element name="SettlementProfile" type="n0:char6" />
+          <xsd:element name="StrategySequence" type="n0:char6" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReCosettleParDatx">
+        <xsd:sequence>
+          <xsd:element name="SetAll" type="n0:char1" />
+          <xsd:element name="SettlementProfile" type="n0:char1" />
+          <xsd:element name="StrategySequence" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReCosettleRlDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="DistRuleGroup" type="n0:numeric3" />
+          <xsd:element name="DistRuleSeqNumber" type="n0:numeric3" />
+          <xsd:element name="SettlRecvObjType" type="n0:char2" />
+          <xsd:element name="SettlRecvObjId" type="n0:char45" />
+          <xsd:element name="SettlRecvObjType2" type="n0:char2" />
+          <xsd:element name="SettlRecvObjId2" type="n0:char45" />
+          <xsd:element name="SettlType" type="n0:char3" />
+          <xsd:element name="Source" type="n0:char3" />
+          <xsd:element name="Percentage" type="n0:decimal5.2" />
+          <xsd:element name="EquivNumber" type="n0:decimal10.0" />
+          <xsd:element name="Amount" type="n0:curr15.2" />
+          <xsd:element name="Currency" type="n0:cuky5" />
+          <xsd:element name="CurrencyIso" type="n0:char3" />
+          <xsd:element name="AmountBca" type="n0:decimal23.4" />
+          <xsd:element name="ValidFromYear" type="n0:numeric4" />
+          <xsd:element name="ValidFromPer" type="n0:numeric3" />
+          <xsd:element name="ValidToYear" type="n0:numeric4" />
+          <xsd:element name="ValidToPer" type="n0:numeric3" />
+          <xsd:element name="FirstUsedYear" type="n0:numeric4" />
+          <xsd:element name="FirstUsedPer" type="n0:numeric3" />
+          <xsd:element name="LastUsedYear" type="n0:numeric4" />
+          <xsd:element name="LastUsedPer" type="n0:numeric3" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Bapiparex">
+        <xsd:sequence>
+          <xsd:element name="Structure" type="n0:char30" />
+          <xsd:element name="Valuepart1" type="n0:char240" />
+          <xsd:element name="Valuepart2" type="n0:char240" />
+          <xsd:element name="Valuepart3" type="n0:char240" />
+          <xsd:element name="Valuepart4" type="n0:char240" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReInfraDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="InfraChar" type="n0:char6" />
+          <xsd:element name="InfraDist" type="n0:quantum8.4" />
+          <xsd:element name="InfraDistUnit" type="n0:unit3" />
+          <xsd:element name="InfraDistUnitIso" type="n0:char3" />
+          <xsd:element name="InfraTime" type="n0:quantum14.4" />
+          <xsd:element name="InfraTimeUnit" type="n0:unit3" />
+          <xsd:element name="InfraTimeUnitIso" type="n0:char3" />
+          <xsd:element name="InfraTimeBase" type="n0:char6" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReMeasurementDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="Measurement" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ValueAvail" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+          <xsd:element name="ValueSetManually" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReObjAddressDat">
+        <xsd:sequence>
+          <xsd:element name="StreetLng" type="n0:char60" />
+          <xsd:element name="HouseNo" type="n0:char10" />
+          <xsd:element name="City" type="n0:char40" />
+          <xsd:element name="PostlCod1" type="n0:char10" />
+          <xsd:element name="Country" type="n0:char3" />
+          <xsd:element name="Region" type="n0:char3" />
+          <xsd:element name="AddressText" type="n0:char35" />
+          <xsd:element name="StrSuppl1" type="n0:char40" />
+          <xsd:element name="StrSuppl2" type="n0:char40" />
+          <xsd:element name="StrSuppl3" type="n0:char40" />
+          <xsd:element name="Location" type="n0:char40" />
+          <xsd:element name="HouseNo2" type="n0:char10" />
+          <xsd:element name="District" type="n0:char40" />
+          <xsd:element name="Building" type="n0:char20" />
+          <xsd:element name="TaxJurCode" type="n0:char15" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReObjAddressDatx">
+        <xsd:sequence>
+          <xsd:element name="SetAll" type="n0:char1" />
+          <xsd:element name="Derive" type="n0:char1" />
+          <xsd:element name="StreetLng" type="n0:char1" />
+          <xsd:element name="HouseNo" type="n0:char1" />
+          <xsd:element name="City" type="n0:char1" />
+          <xsd:element name="PostlCod1" type="n0:char1" />
+          <xsd:element name="Country" type="n0:char1" />
+          <xsd:element name="Region" type="n0:char1" />
+          <xsd:element name="AddressText" type="n0:char1" />
+          <xsd:element name="StrSuppl1" type="n0:char1" />
+          <xsd:element name="StrSuppl2" type="n0:char1" />
+          <xsd:element name="StrSuppl3" type="n0:char1" />
+          <xsd:element name="Location" type="n0:char1" />
+          <xsd:element name="HouseNo2" type="n0:char1" />
+          <xsd:element name="District" type="n0:char1" />
+          <xsd:element name="Building" type="n0:char1" />
+          <xsd:element name="TaxJurCode" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReObjAssignDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="AssignmntObjectType" type="n0:char2" />
+          <xsd:element name="AssignmntObjectId" type="n0:char45" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="IsMainAsset" type="n0:char1" />
+          <xsd:element name="MeasValue" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+          <xsd:element name="RelevantForOptrate" type="n0:char1" />
+          <xsd:element name="PlanningDate" type="n0:date10" />
+          <xsd:element name="EffectiveDate" type="n0:date10" />
+          <xsd:element name="Location" type="n0:char80" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReOptionRateDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="OptionMethod" type="n0:char4" />
+          <xsd:element name="OptionRate" type="n0:decimal9.6" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="OptionRateDelete" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RePartnerDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="Partner" type="n0:char10" />
+          <xsd:element name="RoleType" type="n0:char6" />
+          <xsd:element name="RoleSubtype" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="AddressType" type="n0:char10" />
+          <xsd:element name="PropFractShare" type="n0:decimal9.3" />
+          <xsd:element name="OwnershipShare" type="n0:decimal6.2" />
+          <xsd:element name="CoOwnershipShare" type="n0:decimal9.3" />
+          <xsd:element name="ConvFactorFractShare" type="n0:numeric6" />
+          <xsd:element name="OiAccount" type="n0:char20" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReResubmDateDatc">
+        <xsd:sequence>
+          <xsd:element name="ResubmDate" type="n0:date10" />
+          <xsd:element name="ResubmRuleNo" type="n0:numeric4" />
+          <xsd:element name="ResubmDateIsDone" type="n0:char1" />
+          <xsd:element name="ResubmDateIsFixed" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReResubmRuleDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="ResubmRuleNo" type="n0:numeric4" />
+          <xsd:element name="ResubmRuleParam" type="n0:numeric2" />
+          <xsd:element name="ResubmRule" type="n0:char4" />
+          <xsd:element name="ResubmReason" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ResubmRuleParamType" type="n0:char1" />
+          <xsd:element name="ResubmParamDate" type="n0:date10" />
+          <xsd:element name="ResubmParamNumc" type="n0:numeric4" />
+          <xsd:element name="ResubmParamBool" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReStatusDatc">
+        <xsd:sequence>
+          <xsd:element name="StatProf" type="n0:char8" />
+          <xsd:element name="UsrStatusText" type="n0:char4" />
+          <xsd:element name="Langu" type="n0:lang" />
+          <xsd:element name="LanguIso" type="n0:char2" />
+          <xsd:element name="Inactive" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReTermOaDatc">
+        <xsd:sequence>
+          <xsd:element name="ChangeIndicator" type="n0:char1" />
+          <xsd:element name="TermNo" type="n0:char4" />
+          <xsd:element name="TermText" type="n0:char60" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="BusArea" type="n0:char4" />
+          <xsd:element name="ProfitCtr" type="n0:char10" />
+          <xsd:element name="Taxjurcode" type="n0:char15" />
+          <xsd:element name="Fund" type="n0:char24" />
+          <xsd:element name="FundsCtr" type="n0:char24" />
+          <xsd:element name="CmmtItem" type="n0:char24" />
+          <xsd:element name="FuncArea" type="n0:char24" />
+          <xsd:element name="GrantNbr" type="n0:char24" />
+          <xsd:element name="Measure" type="n0:char24" />
+          <xsd:element name="Budgetperiod" type="n0:char24" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Bapiret2">
+        <xsd:sequence>
+          <xsd:element name="Type" type="n0:char1" />
+          <xsd:element name="Id" type="n0:char20" />
+          <xsd:element name="Number" type="n0:numeric3" />
+          <xsd:element name="Message" type="n0:char220" />
+          <xsd:element name="LogNo" type="n0:char20" />
+          <xsd:element name="LogMsgNo" type="n0:numeric6" />
+          <xsd:element name="MessageV1" type="n0:char50" />
+          <xsd:element name="MessageV2" type="n0:char50" />
+          <xsd:element name="MessageV3" type="n0:char50" />
+          <xsd:element name="MessageV4" type="n0:char50" />
+          <xsd:element name="Parameter" type="n0:char32" />
+          <xsd:element name="Row" type="xsd:int" />
+          <xsd:element name="Field" type="n0:char30" />
+          <xsd:element name="SYSTEM" type="n0:char10" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReArchRelDat">
+        <xsd:sequence>
+          <xsd:element name="ArchObjectType" type="n0:char2" />
+          <xsd:element name="ArchObjectId" type="n0:char45" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="IsPartial" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReArchRelmsDat">
+        <xsd:sequence>
+          <xsd:element name="ArchObjectType" type="n0:char2" />
+          <xsd:element name="ArchObjectId" type="n0:char45" />
+          <xsd:element name="Measurement" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ValuePart" type="n0:quantum17.4" />
+          <xsd:element name="ValueFull" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReCosettleRlDat">
+        <xsd:sequence>
+          <xsd:element name="DistRuleGroup" type="n0:numeric3" />
+          <xsd:element name="DistRuleSeqNumber" type="n0:numeric3" />
+          <xsd:element name="SettlRecvObjType" type="n0:char2" />
+          <xsd:element name="SettlRecvObjId" type="n0:char45" />
+          <xsd:element name="SettlRecvObjType2" type="n0:char2" />
+          <xsd:element name="SettlRecvObjId2" type="n0:char45" />
+          <xsd:element name="SettlType" type="n0:char3" />
+          <xsd:element name="Source" type="n0:char3" />
+          <xsd:element name="Percentage" type="n0:decimal5.2" />
+          <xsd:element name="EquivNumber" type="n0:decimal10.0" />
+          <xsd:element name="Amount" type="n0:curr15.2" />
+          <xsd:element name="Currency" type="n0:cuky5" />
+          <xsd:element name="CurrencyIso" type="n0:char3" />
+          <xsd:element name="AmountBca" type="n0:decimal23.4" />
+          <xsd:element name="ValidFromYear" type="n0:numeric4" />
+          <xsd:element name="ValidFromPer" type="n0:numeric3" />
+          <xsd:element name="ValidToYear" type="n0:numeric4" />
+          <xsd:element name="ValidToPer" type="n0:numeric3" />
+          <xsd:element name="FirstUsedYear" type="n0:numeric4" />
+          <xsd:element name="FirstUsedPer" type="n0:numeric3" />
+          <xsd:element name="LastUsedYear" type="n0:numeric4" />
+          <xsd:element name="LastUsedPer" type="n0:numeric3" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReInfraDat">
+        <xsd:sequence>
+          <xsd:element name="InfraChar" type="n0:char6" />
+          <xsd:element name="InfraDist" type="n0:quantum8.4" />
+          <xsd:element name="InfraDistUnit" type="n0:unit3" />
+          <xsd:element name="InfraDistUnitIso" type="n0:char3" />
+          <xsd:element name="InfraTime" type="n0:quantum14.4" />
+          <xsd:element name="InfraTimeUnit" type="n0:unit3" />
+          <xsd:element name="InfraTimeUnitIso" type="n0:char3" />
+          <xsd:element name="InfraTimeBase" type="n0:char6" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReMeasurementDat">
+        <xsd:sequence>
+          <xsd:element name="Measurement" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ValueAvail" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+          <xsd:element name="ValueSetManually" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReObjAssignDat">
+        <xsd:sequence>
+          <xsd:element name="AssignmntObjectType" type="n0:char2" />
+          <xsd:element name="AssignmntObjectId" type="n0:char45" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="IsMainAsset" type="n0:char1" />
+          <xsd:element name="MeasValue" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+          <xsd:element name="RelevantForOptrate" type="n0:char1" />
+          <xsd:element name="PlanningDate" type="n0:date10" />
+          <xsd:element name="EffectiveDate" type="n0:date10" />
+          <xsd:element name="Location" type="n0:char80" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReOptionRateDat">
+        <xsd:sequence>
+          <xsd:element name="OptionMethod" type="n0:char4" />
+          <xsd:element name="OptionRate" type="n0:decimal9.6" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="OptionRateDelete" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RePartnerDat">
+        <xsd:sequence>
+          <xsd:element name="Partner" type="n0:char10" />
+          <xsd:element name="RoleType" type="n0:char6" />
+          <xsd:element name="RoleSubtype" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="AddressType" type="n0:char10" />
+          <xsd:element name="PropFractShare" type="n0:decimal9.3" />
+          <xsd:element name="OwnershipShare" type="n0:decimal6.2" />
+          <xsd:element name="CoOwnershipShare" type="n0:decimal9.3" />
+          <xsd:element name="ConvFactorFractShare" type="n0:numeric6" />
+          <xsd:element name="OiAccount" type="n0:char20" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReResubmRuleDat">
+        <xsd:sequence>
+          <xsd:element name="ResubmRuleNo" type="n0:numeric4" />
+          <xsd:element name="ResubmRuleParam" type="n0:numeric2" />
+          <xsd:element name="ResubmRule" type="n0:char4" />
+          <xsd:element name="ResubmReason" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ResubmRuleParamType" type="n0:char1" />
+          <xsd:element name="ResubmParamDate" type="n0:date10" />
+          <xsd:element name="ResubmParamNumc" type="n0:numeric4" />
+          <xsd:element name="ResubmParamBool" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReStatusDat">
+        <xsd:sequence>
+          <xsd:element name="StatProf" type="n0:char8" />
+          <xsd:element name="UsrStatusText" type="n0:char4" />
+          <xsd:element name="Langu" type="n0:lang" />
+          <xsd:element name="LanguIso" type="n0:char2" />
+          <xsd:element name="Inactive" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReTermOaDat">
+        <xsd:sequence>
+          <xsd:element name="TermNo" type="n0:char4" />
+          <xsd:element name="TermText" type="n0:char60" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="BusArea" type="n0:char4" />
+          <xsd:element name="ProfitCtr" type="n0:char10" />
+          <xsd:element name="Taxjurcode" type="n0:char15" />
+          <xsd:element name="Fund" type="n0:char24" />
+          <xsd:element name="FundsCtr" type="n0:char24" />
+          <xsd:element name="CmmtItem" type="n0:char24" />
+          <xsd:element name="FuncArea" type="n0:char24" />
+          <xsd:element name="GrantNbr" type="n0:char24" />
+          <xsd:element name="Measure" type="n0:char24" />
+          <xsd:element name="Budgetperiod" type="n0:char24" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReArchRel">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="ArchObjectType" type="n0:char2" />
+          <xsd:element name="ArchObjectId" type="n0:char45" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="IsPartial" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReArchRelms">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="ArchObjectType" type="n0:char2" />
+          <xsd:element name="ArchObjectId" type="n0:char45" />
+          <xsd:element name="Measurement" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ValuePart" type="n0:quantum17.4" />
+          <xsd:element name="ValueFull" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReBusEntity">
+        <xsd:sequence>
+          <xsd:element name="CompCode" type="n0:char4" />
+          <xsd:element name="BusinessEntity" type="n0:char8" />
+          <xsd:element name="IdentObjectType" type="n0:char2" />
+          <xsd:element name="IdentKey" type="n0:char45" />
+          <xsd:element name="CreationUser" type="n0:char12" />
+          <xsd:element name="CreationDate" type="n0:date10" />
+          <xsd:element name="CreationTime" type="n0:time" />
+          <xsd:element name="LastchangeUser" type="n0:char12" />
+          <xsd:element name="LastchangeDate" type="n0:date10" />
+          <xsd:element name="LastchangeTime" type="n0:time" />
+          <xsd:element name="BusinessEntityText" type="n0:char60" />
+          <xsd:element name="MaintenanceArea" type="n0:numeric5" />
+          <xsd:element name="TransportConnection" type="n0:char1" />
+          <xsd:element name="Location" type="n0:numeric4" />
+          <xsd:element name="DistrictLocation" type="n0:numeric2" />
+          <xsd:element name="RegionalLocation" type="n0:char10" />
+          <xsd:element name="ReprListOfRents" type="n0:char6" />
+          <xsd:element name="UnitArea" type="n0:unit3" />
+          <xsd:element name="UnitAreaIso" type="n0:char3" />
+          <xsd:element name="UnitVolume" type="n0:unit3" />
+          <xsd:element name="UnitVolumeIso" type="n0:char3" />
+          <xsd:element name="UnitLength" type="n0:unit3" />
+          <xsd:element name="UnitLengthIso" type="n0:char3" />
+          <xsd:element name="TenancyLaw" type="n0:char5" />
+          <xsd:element name="PredefOperationCosts" type="n0:char4" />
+          <xsd:element name="PredefHeatingExpenses" type="n0:char4" />
+          <xsd:element name="AuthorizationGroup" type="n0:char40" />
+          <xsd:element name="AutoFuncLocDisabled" type="n0:char1" />
+          <xsd:element name="ObjectValidFrom" type="n0:date10" />
+          <xsd:element name="ObjectValidTo" type="n0:date10" />
+          <xsd:element name="Responsible" type="n0:char12" />
+          <xsd:element name="StatProf" type="n0:char8" />
+          <xsd:element name="Neighborhood01" type="n0:char30" />
+          <xsd:element name="Neighborhood02" type="n0:char30" />
+          <xsd:element name="Neighborhood03" type="n0:char30" />
+          <xsd:element name="MandateObjectId" type="n0:char45" />
+          <xsd:element name="MandateMngObjectId" type="n0:char45" />
+          <xsd:element name="MandateCrObjectId" type="n0:char45" />
+          <xsd:element name="Function" type="n0:char4" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReCosettlePar">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="SettlementProfile" type="n0:char6" />
+          <xsd:element name="StrategySequence" type="n0:char6" />
+          <xsd:element name="AllocationStructure" type="n0:char2" />
+          <xsd:element name="SettlementCostElement" type="n0:char10" />
+          <xsd:element name="SourceStructure" type="n0:char2" />
+          <xsd:element name="AsvalDate" type="n0:date10" />
+          <xsd:element name="PaTransferStructure" type="n0:char2" />
+          <xsd:element name="EnteredBy" type="n0:char12" />
+          <xsd:element name="CreatedOn" type="n0:date10" />
+          <xsd:element name="LastChangedBy" type="n0:char12" />
+          <xsd:element name="ChangedOn" type="n0:date10" />
+          <xsd:element name="IncorrectUpdate" type="n0:char1" />
+          <xsd:element name="YearLastUsed" type="n0:numeric4" />
+          <xsd:element name="PeriodLastUsed" type="n0:numeric3" />
+          <xsd:element name="TimeCreated" type="n0:decimal16.0" />
+          <xsd:element name="SettlementRuleText" type="n0:char40" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReCosettleRl">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="DistRuleGroup" type="n0:numeric3" />
+          <xsd:element name="DistRuleSeqNumber" type="n0:numeric3" />
+          <xsd:element name="SettlRecvObjType" type="n0:char2" />
+          <xsd:element name="SettlRecvObjId" type="n0:char45" />
+          <xsd:element name="SettlRecvObjType2" type="n0:char2" />
+          <xsd:element name="SettlRecvObjId2" type="n0:char45" />
+          <xsd:element name="SettlType" type="n0:char3" />
+          <xsd:element name="Source" type="n0:char3" />
+          <xsd:element name="Percentage" type="n0:decimal5.2" />
+          <xsd:element name="EquivNumber" type="n0:decimal10.0" />
+          <xsd:element name="Amount" type="n0:curr15.2" />
+          <xsd:element name="Currency" type="n0:cuky5" />
+          <xsd:element name="CurrencyIso" type="n0:char3" />
+          <xsd:element name="ValidFromYear" type="n0:numeric4" />
+          <xsd:element name="ValidFromPer" type="n0:numeric3" />
+          <xsd:element name="ValidToYear" type="n0:numeric4" />
+          <xsd:element name="ValidToPer" type="n0:numeric3" />
+          <xsd:element name="FirstUsedYear" type="n0:numeric4" />
+          <xsd:element name="FirstUsedPer" type="n0:numeric3" />
+          <xsd:element name="LastUsedYear" type="n0:numeric4" />
+          <xsd:element name="LastUsedPer" type="n0:numeric3" />
+          <xsd:element name="MethTracingFactor" type="n0:numeric3" />
+          <xsd:element name="SettlStrategy" type="n0:char3" />
+          <xsd:element name="AmountBca" type="n0:decimal23.4" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReInfra">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="InfraChar" type="n0:char6" />
+          <xsd:element name="InfraDist" type="n0:quantum8.4" />
+          <xsd:element name="InfraDistUnit" type="n0:unit3" />
+          <xsd:element name="InfraDistUnitIso" type="n0:char3" />
+          <xsd:element name="InfraTime" type="n0:quantum14.4" />
+          <xsd:element name="InfraTimeUnit" type="n0:unit3" />
+          <xsd:element name="InfraTimeUnitIso" type="n0:char3" />
+          <xsd:element name="InfraTimeBase" type="n0:char6" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReMeasurement">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="Measurement" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ValueAvail" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+          <xsd:element name="ValueCompl" type="n0:quantum17.4" />
+          <xsd:element name="ValueSetManually" type="n0:char1" />
+          <xsd:element name="ValueIsHierarchical" type="n0:char1" />
+          <xsd:element name="TotalMeasurement" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReObjAddress">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="StreetLng" type="n0:char60" />
+          <xsd:element name="HouseNo" type="n0:char10" />
+          <xsd:element name="City" type="n0:char40" />
+          <xsd:element name="PostlCod1" type="n0:char10" />
+          <xsd:element name="Country" type="n0:char3" />
+          <xsd:element name="Region" type="n0:char3" />
+          <xsd:element name="AddressText" type="n0:char35" />
+          <xsd:element name="StrSuppl1" type="n0:char40" />
+          <xsd:element name="StrSuppl2" type="n0:char40" />
+          <xsd:element name="StrSuppl3" type="n0:char40" />
+          <xsd:element name="Location" type="n0:char40" />
+          <xsd:element name="HouseNo2" type="n0:char10" />
+          <xsd:element name="District" type="n0:char40" />
+          <xsd:element name="Building" type="n0:char20" />
+          <xsd:element name="TaxJurCode" type="n0:char15" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReObjAssign">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="AssignmntObjectType" type="n0:char2" />
+          <xsd:element name="AssignmntObjectId" type="n0:char45" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="IsMainAsset" type="n0:char1" />
+          <xsd:element name="FuncLocGenerationType" type="n0:char1" />
+          <xsd:element name="InformationalAssignment" type="n0:char1" />
+          <xsd:element name="MeasValue" type="n0:quantum17.4" />
+          <xsd:element name="Unit" type="n0:unit3" />
+          <xsd:element name="UnitIso" type="n0:char3" />
+          <xsd:element name="RelevantForOptrate" type="n0:char1" />
+          <xsd:element name="PlanningDate" type="n0:date10" />
+          <xsd:element name="EffectiveDate" type="n0:date10" />
+          <xsd:element name="Location" type="n0:char80" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReOptionRate">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="OptionMethod" type="n0:char4" />
+          <xsd:element name="OptionRate" type="n0:decimal9.6" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="OptionRateDelete" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="RePartner">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="Partner" type="n0:char10" />
+          <xsd:element name="RoleType" type="n0:char6" />
+          <xsd:element name="RoleSubtype" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="AddressType" type="n0:char10" />
+          <xsd:element name="PropFractShare" type="n0:decimal9.3" />
+          <xsd:element name="OwnershipShare" type="n0:decimal6.2" />
+          <xsd:element name="CoOwnershipShare" type="n0:decimal9.3" />
+          <xsd:element name="ConvFactorFractShare" type="n0:numeric6" />
+          <xsd:element name="OiAccount" type="n0:char20" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReResubmDate">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="ResubmDate" type="n0:date10" />
+          <xsd:element name="ResubmRuleNo" type="n0:numeric4" />
+          <xsd:element name="Responsible" type="n0:char12" />
+          <xsd:element name="ResubmRule" type="n0:char4" />
+          <xsd:element name="ResubmReason" type="n0:char4" />
+          <xsd:element name="ResubmDateIsDone" type="n0:char1" />
+          <xsd:element name="ResubmDateIsFixed" type="n0:char1" />
+          <xsd:element name="ResubmDateInfo" type="n0:char60" />
+          <xsd:element name="CreationUser" type="n0:char12" />
+          <xsd:element name="CreationDate" type="n0:date10" />
+          <xsd:element name="CreationTime" type="n0:time" />
+          <xsd:element name="LastchangeUser" type="n0:char12" />
+          <xsd:element name="LastchangeDate" type="n0:date10" />
+          <xsd:element name="LastchangeTime" type="n0:time" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReResubmRule">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="ResubmRuleNo" type="n0:numeric4" />
+          <xsd:element name="ResubmRuleParam" type="n0:numeric2" />
+          <xsd:element name="ResubmRule" type="n0:char4" />
+          <xsd:element name="ResubmReason" type="n0:char4" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="ResubmRuleParamType" type="n0:char1" />
+          <xsd:element name="ResubmParamDate" type="n0:date10" />
+          <xsd:element name="ResubmParamNumc" type="n0:numeric4" />
+          <xsd:element name="ResubmParamBool" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReStatus">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="StatProf" type="n0:char8" />
+          <xsd:element name="StatusText" type="n0:char4" />
+          <xsd:element name="StatusDscr" type="n0:char30" />
+          <xsd:element name="Langu" type="n0:lang" />
+          <xsd:element name="LanguIso" type="n0:char2" />
+          <xsd:element name="Inactive" type="n0:char1" />
+          <xsd:element name="IsSystemStatus" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReTermOa">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="TermNo" type="n0:char4" />
+          <xsd:element name="TermText" type="n0:char60" />
+          <xsd:element name="ValidFrom" type="n0:date10" />
+          <xsd:element name="ValidTo" type="n0:date10" />
+          <xsd:element name="BusArea" type="n0:char4" />
+          <xsd:element name="ProfitCtr" type="n0:char10" />
+          <xsd:element name="Taxjurcode" type="n0:char15" />
+          <xsd:element name="Fund" type="n0:char24" />
+          <xsd:element name="FundsCtr" type="n0:char24" />
+          <xsd:element name="CmmtItem" type="n0:char24" />
+          <xsd:element name="FuncArea" type="n0:char24" />
+          <xsd:element name="GrantNbr" type="n0:char24" />
+          <xsd:element name="Measure" type="n0:char24" />
+          <xsd:element name="Budgetperiod" type="n0:char24" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReBusEntitySelx">
+        <xsd:sequence>
+          <xsd:element name="BusEntity" type="n0:char1" />
+          <xsd:element name="ObjectAddress" type="n0:char1" />
+          <xsd:element name="CosettleParam" type="n0:char1" />
+          <xsd:element name="TermOrgAssignment" type="n0:char1" />
+          <xsd:element name="Measurement" type="n0:char1" />
+          <xsd:element name="Partner" type="n0:char1" />
+          <xsd:element name="OptionRate" type="n0:char1" />
+          <xsd:element name="CosettleRule" type="n0:char1" />
+          <xsd:element name="ObjAssign" type="n0:char1" />
+          <xsd:element name="ArchRel" type="n0:char1" />
+          <xsd:element name="ArchRelms" type="n0:char1" />
+          <xsd:element name="ResubmRule" type="n0:char1" />
+          <xsd:element name="ResubmDate" type="n0:char1" />
+          <xsd:element name="Status" type="n0:char1" />
+          <xsd:element name="ExtensionOut" type="n0:char1" />
+          <xsd:element name="Infrastructure" type="n0:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReSeloption">
+        <xsd:sequence>
+          <xsd:element name="FieldName" type="n0:char30" />
+          <xsd:element name="Sign" type="n0:char1" />
+          <xsd:element name="Option" type="n0:char2" />
+          <xsd:element name="FieldValueLow" type="n0:char100" />
+          <xsd:element name="FieldValueHigh" type="n0:char100" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReIdentParex">
+        <xsd:sequence>
+          <xsd:element name="ObjectType" type="n0:char2" />
+          <xsd:element name="ObjectId" type="n0:char45" />
+          <xsd:element name="Structure" type="n0:char30" />
+          <xsd:element name="Valuepart1" type="n0:char240" />
+          <xsd:element name="Valuepart2" type="n0:char240" />
+          <xsd:element name="Valuepart3" type="n0:char240" />
+          <xsd:element name="Valuepart4" type="n0:char240" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReArchRelDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReArchRelDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReArchRelmsDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReArchRelmsDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReCosettleRlDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReCosettleRlDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiparex">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:Bapiparex" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReInfraDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReInfraDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReMeasurementDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReMeasurementDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReObjAssignDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReObjAssignDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReOptionRateDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReOptionRateDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiRePartnerDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:RePartnerDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReResubmDateDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReResubmDateDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReResubmRuleDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReResubmRuleDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReStatusDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReStatusDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReTermOaDatc">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReTermOaDatc" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiret2">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:Bapiret2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReArchRelDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReArchRelDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReArchRelmsDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReArchRelmsDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReCosettleRlDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReCosettleRlDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReInfraDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReInfraDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReMeasurementDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReMeasurementDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReObjAssignDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReObjAssignDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReOptionRateDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReOptionRateDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiRePartnerDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:RePartnerDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReResubmRuleDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReResubmRuleDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReStatusDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReStatusDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReTermOaDat">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReTermOaDat" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReArchRel">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReArchRel" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReArchRelms">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReArchRelms" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReCosettleRl">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReCosettleRl" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReInfra">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReInfra" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReMeasurement">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReMeasurement" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReObjAssign">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReObjAssign" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReOptionRate">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReOptionRate" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiRePartner">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:RePartner" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReResubmDate">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReResubmDate" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReResubmRule">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReResubmRule" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReStatus">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReStatus" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReTermOa">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReTermOa" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReSeloption">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReSeloption" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReBusEntity">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReBusEntity" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReCosettlePar">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReCosettlePar" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReIdentParex">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReIdentParex" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TableOfBapiReObjAddress">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:ReObjAddress" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BusinessEntityREFXChange">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="ArchRel" type="tns:TableOfBapiReArchRelDatc" />
+            <xsd:element minOccurs="0" name="ArchRelms" type="tns:TableOfBapiReArchRelmsDatc" />
+            <xsd:element minOccurs="0" name="BusEntity" type="tns:ReBusEntityDat" />
+            <xsd:element minOccurs="0" name="BusEntityX" type="tns:ReBusEntityDatx" />
+            <xsd:element name="BusinessEntityNumber" type="n0:char8" />
+            <xsd:element name="CompCode" type="n0:char4" />
+            <xsd:element minOccurs="0" name="CosettleParam" type="tns:ReCosettleParDat" />
+            <xsd:element minOccurs="0" name="CosettleParamX" type="tns:ReCosettleParDatx" />
+            <xsd:element minOccurs="0" name="CosettleRule" type="tns:TableOfBapiReCosettleRlDatc" />
+            <xsd:element minOccurs="0" name="ExtensionIn" type="tns:TableOfBapiparex" />
+            <xsd:element minOccurs="0" name="Infrastructure" type="tns:TableOfBapiReInfraDatc" />
+            <xsd:element minOccurs="0" name="Measurement" type="tns:TableOfBapiReMeasurementDatc" />
+            <xsd:element minOccurs="0" name="ObjAssign" type="tns:TableOfBapiReObjAssignDatc" />
+            <xsd:element minOccurs="0" name="ObjectAddress" type="tns:ReObjAddressDat" />
+            <xsd:element minOccurs="0" name="ObjectAddressX" type="tns:ReObjAddressDatx" />
+            <xsd:element minOccurs="0" name="OptionRate" type="tns:TableOfBapiReOptionRateDatc" />
+            <xsd:element minOccurs="0" name="Partner" type="tns:TableOfBapiRePartnerDatc" />
+            <xsd:element minOccurs="0" name="ResubmDate" type="tns:TableOfBapiReResubmDateDatc" />
+            <xsd:element minOccurs="0" name="ResubmRule" type="tns:TableOfBapiReResubmRuleDatc" />
+            <xsd:element minOccurs="0" name="Status" type="tns:TableOfBapiReStatusDatc" />
+            <xsd:element minOccurs="0" name="TermOrgAssignment" type="tns:TableOfBapiReTermOaDatc" />
+            <xsd:element minOccurs="0" name="TestRun" type="n0:char1" />
+            <xsd:element minOccurs="0" name="Trans" type="n0:char4" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BusinessEntityREFXChangeResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Return" type="tns:TableOfBapiret2" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BusinessEntityREFXCreate">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="ArchRel" type="tns:TableOfBapiReArchRelDat" />
+            <xsd:element minOccurs="0" name="ArchRelms" type="tns:TableOfBapiReArchRelmsDat" />
+            <xsd:element minOccurs="0" name="BusEntity" type="tns:ReBusEntityDat" />
+            <xsd:element minOccurs="0" name="BusinessEntityNumberExt" type="n0:char8" />
+            <xsd:element name="CompCodeExt" type="n0:char4" />
+            <xsd:element minOccurs="0" name="CosettleParam" type="tns:ReCosettleParDat" />
+            <xsd:element minOccurs="0" name="CosettleRule" type="tns:TableOfBapiReCosettleRlDat" />
+            <xsd:element minOccurs="0" name="ExtensionIn" type="tns:TableOfBapiparex" />
+            <xsd:element minOccurs="0" name="Infrastructure" type="tns:TableOfBapiReInfraDat" />
+            <xsd:element minOccurs="0" name="Measurement" type="tns:TableOfBapiReMeasurementDat" />
+            <xsd:element minOccurs="0" name="ObjAssign" type="tns:TableOfBapiReObjAssignDat" />
+            <xsd:element minOccurs="0" name="ObjectAddress" type="tns:ReObjAddressDat" />
+            <xsd:element minOccurs="0" name="OptionRate" type="tns:TableOfBapiReOptionRateDat" />
+            <xsd:element minOccurs="0" name="Partner" type="tns:TableOfBapiRePartnerDat" />
+            <xsd:element minOccurs="0" name="ResubmRule" type="tns:TableOfBapiReResubmRuleDat" />
+            <xsd:element minOccurs="0" name="Status" type="tns:TableOfBapiReStatusDat" />
+            <xsd:element minOccurs="0" name="TermOrgAssignment" type="tns:TableOfBapiReTermOaDat" />
+            <xsd:element minOccurs="0" name="TestRun" type="n0:char1" />
+            <xsd:element minOccurs="0" name="Trans" type="n0:char4" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BusinessEntityREFXCreateResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="BusinessEntityNumber" type="n0:char8" />
+            <xsd:element name="CompCode" type="n0:char4" />
+            <xsd:element name="Return" type="tns:TableOfBapiret2" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BusinessEntityREFXGetDetail">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="BusinessEntityNumber" type="n0:char8" />
+            <xsd:element name="CompCode" type="n0:char4" />
+            <xsd:element minOccurs="0" name="DetailDataFrom" type="n0:date10" />
+            <xsd:element minOccurs="0" name="DetailDataTo" type="n0:date10" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BusinessEntityREFXGetDetailResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="ArchRel" type="tns:TableOfBapiReArchRel" />
+            <xsd:element minOccurs="0" name="ArchRelms" type="tns:TableOfBapiReArchRelms" />
+            <xsd:element name="BusEntity" type="tns:ReBusEntity" />
+            <xsd:element name="CosettleParam" type="tns:ReCosettlePar" />
+            <xsd:element minOccurs="0" name="CosettleRule" type="tns:TableOfBapiReCosettleRl" />
+            <xsd:element minOccurs="0" name="ExtensionOut" type="tns:TableOfBapiparex" />
+            <xsd:element minOccurs="0" name="Infrastructure" type="tns:TableOfBapiReInfra" />
+            <xsd:element minOccurs="0" name="Measurement" type="tns:TableOfBapiReMeasurement" />
+            <xsd:element minOccurs="0" name="ObjAssign" type="tns:TableOfBapiReObjAssign" />
+            <xsd:element name="ObjectAddress" type="tns:ReObjAddress" />
+            <xsd:element minOccurs="0" name="OptionRate" type="tns:TableOfBapiReOptionRate" />
+            <xsd:element minOccurs="0" name="Partner" type="tns:TableOfBapiRePartner" />
+            <xsd:element minOccurs="0" name="ResubmDate" type="tns:TableOfBapiReResubmDate" />
+            <xsd:element minOccurs="0" name="ResubmRule" type="tns:TableOfBapiReResubmRule" />
+            <xsd:element minOccurs="0" name="Return" type="tns:TableOfBapiret2" />
+            <xsd:element minOccurs="0" name="Status" type="tns:TableOfBapiReStatus" />
+            <xsd:element minOccurs="0" name="TermOrgAssignment" type="tns:TableOfBapiReTermOa" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BusinessEntityREFXGetList">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="DetailDataFrom" type="n0:date10" />
+            <xsd:element minOccurs="0" name="DetailDataTo" type="n0:date10" />
+            <xsd:element minOccurs="0" name="MaxRows" type="xsd:int" />
+            <xsd:element minOccurs="0" name="SelectX" type="tns:ReBusEntitySelx" />
+            <xsd:element name="Seloption" type="tns:TableOfBapiReSeloption" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BusinessEntityREFXGetListResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="ArchRel" type="tns:TableOfBapiReArchRel" />
+            <xsd:element minOccurs="0" name="ArchRelms" type="tns:TableOfBapiReArchRelms" />
+            <xsd:element minOccurs="0" name="BusEntity" type="tns:TableOfBapiReBusEntity" />
+            <xsd:element minOccurs="0" name="CosettleParam" type="tns:TableOfBapiReCosettlePar" />
+            <xsd:element minOccurs="0" name="CosettleRule" type="tns:TableOfBapiReCosettleRl" />
+            <xsd:element minOccurs="0" name="ExtensionOut" type="tns:TableOfBapiReIdentParex" />
+            <xsd:element minOccurs="0" name="Infrastructure" type="tns:TableOfBapiReInfra" />
+            <xsd:element minOccurs="0" name="Measurement" type="tns:TableOfBapiReMeasurement" />
+            <xsd:element minOccurs="0" name="ObjAssign" type="tns:TableOfBapiReObjAssign" />
+            <xsd:element minOccurs="0" name="ObjectAddress" type="tns:TableOfBapiReObjAddress" />
+            <xsd:element minOccurs="0" name="OptionRate" type="tns:TableOfBapiReOptionRate" />
+            <xsd:element minOccurs="0" name="Partner" type="tns:TableOfBapiRePartner" />
+            <xsd:element minOccurs="0" name="ResubmDate" type="tns:TableOfBapiReResubmDate" />
+            <xsd:element minOccurs="0" name="ResubmRule" type="tns:TableOfBapiReResubmRule" />
+            <xsd:element minOccurs="0" name="Return" type="tns:TableOfBapiret2" />
+            <xsd:element minOccurs="0" name="Status" type="tns:TableOfBapiReStatus" />
+            <xsd:element minOccurs="0" name="TermOrgAssignment" type="tns:TableOfBapiReTermOa" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BapiServiceTransactionCommit">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="WAIT" type="n0:char1" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BapiServiceTransactionCommitResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Return" type="tns:Bapiret2" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BapiServiceTransactionRollback">
+        <xsd:complexType>
+          <xsd:sequence />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BapiServiceTransactionRollbackResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Return" type="tns:Bapiret2" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="BusinessEntityREFXChange">
+    <wsdl:part name="parameters" element="tns:BusinessEntityREFXChange" />
+  </wsdl:message>
+  <wsdl:message name="BusinessEntityREFXChangeResponse">
+    <wsdl:part name="parameter" element="tns:BusinessEntityREFXChangeResponse" />
+  </wsdl:message>
+  <wsdl:message name="BusinessEntityREFXCreate">
+    <wsdl:part name="parameters" element="tns:BusinessEntityREFXCreate" />
+  </wsdl:message>
+  <wsdl:message name="BusinessEntityREFXCreateResponse">
+    <wsdl:part name="parameter" element="tns:BusinessEntityREFXCreateResponse" />
+  </wsdl:message>
+  <wsdl:message name="BusinessEntityREFXGetDetail">
+    <wsdl:part name="parameters" element="tns:BusinessEntityREFXGetDetail" />
+  </wsdl:message>
+  <wsdl:message name="BusinessEntityREFXGetDetailResponse">
+    <wsdl:part name="parameter" element="tns:BusinessEntityREFXGetDetailResponse" />
+  </wsdl:message>
+  <wsdl:message name="BusinessEntityREFXGetList">
+    <wsdl:part name="parameters" element="tns:BusinessEntityREFXGetList" />
+  </wsdl:message>
+  <wsdl:message name="BusinessEntityREFXGetListResponse">
+    <wsdl:part name="parameter" element="tns:BusinessEntityREFXGetListResponse" />
+  </wsdl:message>
+  <wsdl:message name="BapiServiceTransactionCommit">
+    <wsdl:part name="parameters" element="tns:BapiServiceTransactionCommit" />
+  </wsdl:message>
+  <wsdl:message name="BapiServiceTransactionCommitResponse">
+    <wsdl:part name="parameter" element="tns:BapiServiceTransactionCommitResponse" />
+  </wsdl:message>
+  <wsdl:message name="BapiServiceTransactionRollback">
+    <wsdl:part name="parameters" element="tns:BapiServiceTransactionRollback" />
+  </wsdl:message>
+  <wsdl:message name="BapiServiceTransactionRollbackResponse">
+    <wsdl:part name="parameter" element="tns:BapiServiceTransactionRollbackResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Z_HH_BusinessEntityREFX">
+    <wsp:Policy>
+      <wsp:PolicyReference URI="#IF_IF_Z_HH_BusinessEntityREFX" />
+    </wsp:Policy>
+    <wsdl:operation name="BusinessEntityREFXChange">
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_IF_OP_BusinessEntityREFXChange" />
+      </wsp:Policy>
+      <wsdl:input message="tns:BusinessEntityREFXChange" />
+      <wsdl:output message="tns:BusinessEntityREFXChangeResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BusinessEntityREFXCreate">
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_IF_OP_BusinessEntityREFXCreate" />
+      </wsp:Policy>
+      <wsdl:input message="tns:BusinessEntityREFXCreate" />
+      <wsdl:output message="tns:BusinessEntityREFXCreateResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BusinessEntityREFXGetDetail">
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_IF_OP_BusinessEntityREFXGetDetail" />
+      </wsp:Policy>
+      <wsdl:input message="tns:BusinessEntityREFXGetDetail" />
+      <wsdl:output message="tns:BusinessEntityREFXGetDetailResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BusinessEntityREFXGetList">
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_IF_OP_BusinessEntityREFXGetList" />
+      </wsp:Policy>
+      <wsdl:input message="tns:BusinessEntityREFXGetList" />
+      <wsdl:output message="tns:BusinessEntityREFXGetListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BapiServiceTransactionCommit">
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_IF_OP_BapiServiceTransactionCommit" />
+      </wsp:Policy>
+      <wsdl:input message="tns:BapiServiceTransactionCommit" />
+      <wsdl:output message="tns:BapiServiceTransactionCommitResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BapiServiceTransactionRollback">
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_IF_OP_BapiServiceTransactionRollback" />
+      </wsp:Policy>
+      <wsdl:input message="tns:BapiServiceTransactionRollback" />
+      <wsdl:output message="tns:BapiServiceTransactionRollbackResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Z_HH_BUSINESSENTITYREFX" type="tns:Z_HH_BusinessEntityREFX">
+    <wsp:Policy>
+      <wsp:PolicyReference URI="#BN_BN_Z_HH_BUSINESSENTITYREFX" />
+    </wsp:Policy>
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="BusinessEntityREFXChange">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BusinessEntityREFXCreate">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BusinessEntityREFXGetDetail">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BusinessEntityREFXGetList">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BapiServiceTransactionCommit">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BapiServiceTransactionRollback">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Z_HH_BUSINESSENTITYREFX">
+    <wsdl:port name="Z_HH_BUSINESSENTITYREFX" binding="tns:Z_HH_BUSINESSENTITYREFX">
+      <soap:address location="http://i48lp1.in.tum.de:8048/sap/bc/srt/rfc/sap/z_hh_businessentityrefx/902/z_hh_businessentityrefx/z_hh_businessentityrefx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
