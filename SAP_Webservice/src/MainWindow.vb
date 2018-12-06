@@ -170,7 +170,7 @@
         'posting parameters
         Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
             .TermNo = " ", 'TODO?
-            .ValidFrom = "00010101", '01.01.0001 'TODO?
+            .ValidFrom = "0001-01-01", '01.01.0001 'TODO?
             .BusArea = TbBusinessArea.Text,
             .ProfitCtr = TbProfitCenter.Text
         }
@@ -444,7 +444,7 @@
         Dim ConvertedDate As Date
 
         'TODO implement function
-        ConvertedDate = New Date()
+        ConvertedDate = New Date() ' format: 2018-12-06
 
         Return ConvertedDate
     End Function
