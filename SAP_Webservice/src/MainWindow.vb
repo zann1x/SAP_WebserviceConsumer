@@ -21,7 +21,7 @@
         Dim StreamReader As IO.StreamReader
         Dim Line, Vals() As String
 
-        'tenancy law
+        ' tenancy law
         StreamReader = New IO.StreamReader("res/tenancy_law.txt")
         Dim TenancyLawComboSource As New Dictionary(Of String, String) From {
             {Space(1), Nothing}
@@ -46,7 +46,7 @@
         CombTenancyLaw.DisplayMember = "Value"
         CombTenancyLaw.ValueMember = "Key"
 
-        'country
+        ' country
         StreamReader = New IO.StreamReader("res/country_iso.txt")
         Dim CountryComboSource As New Dictionary(Of String, String) From {
             {Space(1), Nothing}
@@ -71,7 +71,7 @@
         CombCountry.DisplayMember = "Value"
         CombCountry.ValueMember = "Key"
 
-        'valid from
+        ' valid from
         DtpBusEntityValidFrom.Value = Date.Today
         DtpBusEntityValidTo.Value = DtpBusEntityValidTo.MaxDate
     End Sub
@@ -84,12 +84,12 @@
     Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
         BtnChange.Enabled = False
 
-        'header
+        ' header
         TbCompanyCode.Clear()
         TbSite.Clear()
         TbNameOfSite.Clear()
 
-        'general data
+        ' general data
         DtpBusEntityValidFrom.Value = Date.Today
         DtpBusEntityValidTo.Value = DtpBusEntityValidTo.MaxDate
 
@@ -100,7 +100,7 @@
         TbCity.Clear()
         CombCountry.SelectedIndex = 0
 
-        'reference factors
+        ' reference factors
         CombTenancyLaw.SelectedIndex = 0
     End Sub
 
@@ -138,16 +138,16 @@
         Dim CreateRequest As New BusinessEntity.BusinessEntityREFXCreate()
         Dim CreateResponse As BusinessEntity.BusinessEntityREFXCreateResponse
 
-        'struct initialization
+        ' struct initialization
         CreateRequest.BusEntity = New BusinessEntity.ReBusEntityDat()
         CreateRequest.ObjectAddress = New BusinessEntity.ReObjAddressDat()
 
-        'header
+        ' header
         CreateRequest.CompCodeExt = TbCompanyCode.Text
         CreateRequest.BusinessEntityNumberExt = TbSite.Text
         CreateRequest.BusEntity.BusinessEntityText = TbNameOfSite.Text
 
-        'general data
+        ' general data
         CreateRequest.BusEntity.ObjectValidFrom = ConvertDateToSAP(DtpBusEntityValidFrom.Value)
         CreateRequest.BusEntity.ObjectValidTo = ConvertDateToSAP(DtpBusEntityValidTo.Value)
 
@@ -161,22 +161,33 @@
             CreateRequest.ObjectAddress.Country = kvp.Key
         End If
 
-        'reference factors
+        ' reference factors
         Dim TenancyLawKvp = DirectCast(CombTenancyLaw.SelectedItem, KeyValuePair(Of String, String))
         If TenancyLawKvp.Value <> Nothing Then
             CreateRequest.BusEntity.TenancyLaw = TenancyLawKvp.Key
         End If
 
-        'posting parameters
+        ' posting parameters
+        '.TermNo = " ", 'TODO ?
+        '.ValidFrom = "0001-01-01", 'TODO ?
         Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
-            .TermNo = " ", 'TODO?
-            .ValidFrom = "0001-01-01", '01.01.0001 'TODO?
             .BusArea = TbBusinessArea.Text,
             .ProfitCtr = TbProfitCenter.Text
         }
         CreateRequest.TermOrgAssignment = {TermOaDat}
 
-        'create entity
+        'TODO trans seems not to work
+        'CreateRequest.Trans = "BFRE" ' = release -> defined in type pool reca1 as constants reca1_bustrans
+
+        'TODO status seems not to work
+        'CreateRequest.BusEntity.StatProf = "I0098"
+        'Dim Status As New BusinessEntity.ReStatusDat With {
+        '    .StatProf = "I0098",
+        '    .UsrStatusText = "ANGL"
+        '}
+        'CreateRequest.Status = {Status}
+
+        ' create site
         CreateResponse = sap_proxy.BusinessEntityREFXCreate(CreateRequest)
 
         If Not CheckErrors(CreateResponse.Return) Then
@@ -199,18 +210,18 @@
 
         'TODO find out what has changed and set corresponding fields
 
-        'struct initialization
+        ' struct initialization
         ChangeRequest.BusEntity = New BusinessEntity.ReBusEntityDat()
         ChangeRequest.ObjectAddress = New BusinessEntity.ReObjAddressDat()
 
         ChangeRequest.BusEntityX = New BusinessEntity.ReBusEntityDatx()
         ChangeRequest.ObjectAddressX = New BusinessEntity.ReObjAddressDatx()
 
-        'header
+        ' header
         ChangeRequest.BusEntity.BusinessEntityText = TbNameOfSite.Text
         ChangeRequest.BusEntityX.BusinessEntityText = "X"
 
-        'general data
+        ' general data
         ChangeRequest.BusEntity.ObjectValidFrom = ConvertDateToSAP(DtpBusEntityValidFrom.Value)
         ChangeRequest.BusEntityX.ObjectValidFrom = "X"
         ChangeRequest.BusEntity.ObjectValidTo = ConvertDateToSAP(DtpBusEntityValidTo.Value)
@@ -229,21 +240,21 @@
         ChangeRequest.ObjectAddress.Country = CombCountry.SelectedValue
         ChangeRequest.ObjectAddressX.Country = "X"
 
-        'reference factors
+        ' reference factors
         ChangeRequest.BusEntity.TenancyLaw = CombTenancyLaw.SelectedValue
         ChangeRequest.BusEntityX.TenancyLaw = "X"
 
-        'posting paramters
+        ' posting paramters
         Dim TermOrgAssignment As New BusinessEntity.ReTermOaDatc With {
             .ChangeIndicator = "U", 'TODO/ possible indicators are ' ' for ignore, 'I' for insert, 'U' for update, 'D' for delete
-            .TermNo = TbTermOrgAssignmentNumber.Text, 'mandatory for identification
-            .ValidFrom = ConvertDateToSAP(DtpTermOrgAssignmentValidFrom.Value), 'mandatory for identification
+            .TermNo = TbTermOrgAssignmentNumber.Text, ' mandatory for identification
+            .ValidFrom = ConvertDateToSAP(DtpTermOrgAssignmentValidFrom.Value), ' mandatory for identification
             .BusArea = TbBusinessArea.Text,
             .ProfitCtr = TbProfitCenter.Text
         }
         ChangeRequest.TermOrgAssignment = {TermOrgAssignment}
 
-        'change the site
+        ' change the site
         ChangeResponse = sap_proxy.BusinessEntityREFXChange(ChangeRequest)
 
         If Not CheckErrors(ChangeResponse.Return) Then
@@ -268,12 +279,12 @@
 
         DetailResponse = sap_proxy.BusinessEntityREFXGetDetail(DetailRequest)
 
-        'header
+        ' header
         TbCompanyCode.Text = DetailResponse.BusEntity.CompCode
         TbSite.Text = DetailResponse.BusEntity.BusinessEntity
         TbNameOfSite.Text = DetailResponse.BusEntity.BusinessEntityText
 
-        'general data
+        ' general data
         DtpBusEntityValidFrom.Value = ConvertDateToInternal(DetailResponse.BusEntity.ObjectValidFrom, DtpBusEntityValidFrom.MinDate, DtpBusEntityValidFrom.MaxDate)
         DtpBusEntityValidTo.Value = ConvertDateToInternal(DetailResponse.BusEntity.ObjectValidTo, DtpBusEntityValidTo.MinDate, DtpBusEntityValidTo.MaxDate)
 
@@ -284,11 +295,11 @@
         TbCity.Text = DetailResponse.ObjectAddress.City
         CombCountry.SelectedValue = DetailResponse.ObjectAddress.Country
 
-        'reference factors
+        ' reference factors
         CombTenancyLaw.SelectedValue = DetailResponse.BusEntity.TenancyLaw
 
-        'posting parameters
-        'assuming there is only one posting parameter
+        ' posting parameters
+        ' assuming there is only one posting parameter
         Dim TermOrgAssignment = DetailResponse.TermOrgAssignment.ElementAt(0)
         TbTermOrgAssignmentNumber.Text = TermOrgAssignment.TermNo
         DtpTermOrgAssignmentValidFrom.Value = ConvertDateToInternal(TermOrgAssignment.ValidFrom, DtpTermOrgAssignmentValidFrom.MinDate, DtpTermOrgAssignmentValidFrom.MaxDate)
@@ -398,7 +409,7 @@
     Private Sub RollbackWork()
         Dim RollbackRequest As New BusinessEntity.BapiServiceTransactionRollback()
 
-        'no return messages are received in case of an error here
+        ' no return messages are received in case of an error here
         sap_proxy.BapiServiceTransactionRollback(RollbackRequest)
     End Sub
 
@@ -415,22 +426,22 @@
 
         DateSAP = Value
 
-        'year
+        ' year
         If Value.Substring(0, 4) = "0000" Then
             Value = "0001" & Value.Substring(4)
         End If
-        'month
+        ' month
         If Value.Substring(5, 2) = "00" Then
             Value = Value.Substring(0, 5) & "01" & Value.Substring(7)
         End If
-        'day
+        ' day
         If Value.Substring(8, 2) = "00" Then
             Value = Value.Substring(0, 8) & "01"
         End If
 
         ConvertedDate = New Date(Value.Substring(0, 4), Value.Substring(5, 2), Value.Substring(8, 2), 0, 0, 0)
 
-        'check bounds
+        ' check bounds
         If ConvertedDate < MinDate Then
             ConvertedDate = MinDate
         ElseIf ConvertedDate > MaxDate Then
@@ -440,13 +451,8 @@
         Return ConvertedDate
     End Function
 
-    Private Function ConvertDateToSAP(ByVal Value As String) As Date
-        Dim ConvertedDate As Date
-
-        'TODO implement function
-        ConvertedDate = New Date() ' format: 2018-12-06
-
-        Return ConvertedDate
+    Private Function ConvertDateToSAP(ByVal Value As String) As String
+        Return Value.Substring(6, 4) & "-" & Value.Substring(3, 2) & "-" & Value.Substring(0, 2) ' format: 2018-12-31
     End Function
 
     Private Sub OnKeyUpInTbCompanyCodeList(sender As Object, e As KeyEventArgs) Handles TbCompanyCodeList.KeyUp

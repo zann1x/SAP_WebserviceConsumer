@@ -53,6 +53,8 @@ Partial Class MainWindow
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.TpPostingParameters = New System.Windows.Forms.TabPage()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.DtpTermOrgAssignmentValidFrom = New System.Windows.Forms.DateTimePicker()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LblTermOrgAssignmentValidFrom = New System.Windows.Forms.Label()
         Me.TbTermOrgAssignmentNumber = New System.Windows.Forms.TextBox()
@@ -72,8 +74,6 @@ Partial Class MainWindow
         Me.TbCompanyCodeList = New System.Windows.Forms.TextBox()
         Me.Splitter1 = New System.Windows.Forms.Splitter()
         Me.LblMandatoryFields = New System.Windows.Forms.Label()
-        Me.DtpTermOrgAssignmentValidFrom = New System.Windows.Forms.DateTimePicker()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TpGeneralData.SuspendLayout()
         Me.TpReferenceFactors.SuspendLayout()
@@ -391,14 +391,33 @@ Partial Class MainWindow
         Me.TpPostingParameters.TabIndex = 5
         Me.TpPostingParameters.Text = "Buchungsparameter"
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(220, 85)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(268, 13)
+        Me.Label1.TabIndex = 9
+        Me.Label1.Text = "(z.B. N999 = Dummy für nicht zugeordnete Buchungen)"
+        '
+        'DtpTermOrgAssignmentValidFrom
+        '
+        Me.DtpTermOrgAssignmentValidFrom.Enabled = False
+        Me.DtpTermOrgAssignmentValidFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.DtpTermOrgAssignmentValidFrom.Location = New System.Drawing.Point(114, 30)
+        Me.DtpTermOrgAssignmentValidFrom.Name = "DtpTermOrgAssignmentValidFrom"
+        Me.DtpTermOrgAssignmentValidFrom.Size = New System.Drawing.Size(95, 20)
+        Me.DtpTermOrgAssignmentValidFrom.TabIndex = 8
+        Me.DtpTermOrgAssignmentValidFrom.Value = New Date(2018, 1, 1, 0, 0, 0, 0)
+        '
         'Label2
         '
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(220, 56)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(98, 13)
+        Me.Label2.Size = New System.Drawing.Size(119, 13)
         Me.Label2.TabIndex = 7
-        Me.Label2.Text = "(9100 = Immobilien)"
+        Me.Label2.Text = "(z.B. 9100 = Immobilien)"
         '
         'LblTermOrgAssignmentValidFrom
         '
@@ -434,7 +453,6 @@ Partial Class MainWindow
         Me.TbBusinessArea.Name = "TbBusinessArea"
         Me.TbBusinessArea.Size = New System.Drawing.Size(38, 20)
         Me.TbBusinessArea.TabIndex = 3
-        Me.TbBusinessArea.Text = "9100"
         '
         'LblBusinessArea
         '
@@ -461,7 +479,6 @@ Partial Class MainWindow
         Me.TbProfitCenter.Name = "TbProfitCenter"
         Me.TbProfitCenter.Size = New System.Drawing.Size(100, 20)
         Me.TbProfitCenter.TabIndex = 0
-        Me.TbProfitCenter.Text = "N999"
         '
         'TabPage7
         '
@@ -569,25 +586,6 @@ Partial Class MainWindow
         Me.LblMandatoryFields.Size = New System.Drawing.Size(92, 15)
         Me.LblMandatoryFields.TabIndex = 19
         Me.LblMandatoryFields.Text = "* mandatory fields"
-        '
-        'DtpTermOrgAssignmentValidFrom
-        '
-        Me.DtpTermOrgAssignmentValidFrom.Enabled = False
-        Me.DtpTermOrgAssignmentValidFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DtpTermOrgAssignmentValidFrom.Location = New System.Drawing.Point(114, 30)
-        Me.DtpTermOrgAssignmentValidFrom.Name = "DtpTermOrgAssignmentValidFrom"
-        Me.DtpTermOrgAssignmentValidFrom.Size = New System.Drawing.Size(95, 20)
-        Me.DtpTermOrgAssignmentValidFrom.TabIndex = 8
-        Me.DtpTermOrgAssignmentValidFrom.Value = New Date(2018, 1, 1, 0, 0, 0, 0)
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(220, 85)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(247, 13)
-        Me.Label1.TabIndex = 9
-        Me.Label1.Text = "(N999 = Dummy für nicht zugeordnete Buchungen)"
         '
         'MainWindow
         '
