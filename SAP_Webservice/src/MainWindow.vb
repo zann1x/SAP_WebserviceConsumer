@@ -1,4 +1,30 @@
-﻿Public Class MainWindow
+﻿Imports System.Text.RegularExpressions
+
+Public Class MainWindow
+    Private Structure S_BusinessEntity
+        Public CompanyCode As String
+        Public Site As String
+        Public NameOfSite As String
+
+        Public BE_ValidFrom As String
+        Public BE_ValidTo As String
+        Public ObjectDescr As String
+        Public Street As String
+        Public HouseNo As String
+        Public Postcode As String
+        Public City As String
+        Public Country As String
+
+        Public TenancyLaw As String
+
+        Public TermNo As String
+        Public OA_ValidFrom As String
+        Public BusinessArea As String
+        Public Proficenter As String
+    End Structure
+
+    Dim BE_Instance As S_BusinessEntity
+
     ''' <summary>
     ''' Loads the main window initially
     ''' </summary>
@@ -21,7 +47,7 @@
         Dim StreamReader As IO.StreamReader
         Dim Line, Vals() As String
 
-        'tenancy law
+        ' tenancy law
         StreamReader = New IO.StreamReader("res/tenancy_law.txt")
         Dim TenancyLawComboSource As New Dictionary(Of String, String) From {
             {Space(1), Nothing}
@@ -46,7 +72,7 @@
         CombTenancyLaw.DisplayMember = "Value"
         CombTenancyLaw.ValueMember = "Key"
 
-        'country
+        ' country
         StreamReader = New IO.StreamReader("res/country_iso.txt")
         Dim CountryComboSource As New Dictionary(Of String, String) From {
             {Space(1), Nothing}
@@ -71,9 +97,7 @@
         CombCountry.DisplayMember = "Value"
         CombCountry.ValueMember = "Key"
 
-        'valid from
-        DtpBusEntityValidFrom.Value = Date.Today
-        DtpBusEntityValidTo.Value = DtpBusEntityValidTo.MaxDate
+        BtnNew.PerformClick()
     End Sub
 
     ''' <summary>
@@ -82,16 +106,18 @@
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
+        BE_Instance = New S_BusinessEntity
+
         BtnChange.Enabled = False
 
-        'header
+        ' header
         TbCompanyCode.Clear()
         TbSite.Clear()
         TbNameOfSite.Clear()
 
-        'general data
-        DtpBusEntityValidFrom.Value = Date.Today
-        DtpBusEntityValidTo.Value = DtpBusEntityValidTo.MaxDate
+        ' general data
+        TbBusEntityValidFrom.Clear()
+        TbBusEntityValidTo.Clear()
 
         TbObjectDescr.Clear()
         TbStreet.Clear()
@@ -100,8 +126,14 @@
         TbCity.Clear()
         CombCountry.SelectedIndex = 0
 
-        'reference factors
+        ' reference factors
         CombTenancyLaw.SelectedIndex = 0
+
+        ' posting paramters
+        TbTermOrgAssignmentNumber.Clear()
+        TbTermOrgAssignmentValidFrom.Clear()
+        TbBusinessArea.Clear()
+        TbProfitCenter.Clear()
     End Sub
 
     ''' <summary>
@@ -138,18 +170,28 @@
         Dim CreateRequest As New BusinessEntity.BusinessEntityREFXCreate()
         Dim CreateResponse As BusinessEntity.BusinessEntityREFXCreateResponse
 
-        'struct initialization
+        ' struct initialization
         CreateRequest.BusEntity = New BusinessEntity.ReBusEntityDat()
         CreateRequest.ObjectAddress = New BusinessEntity.ReObjAddressDat()
 
-        'header
+        ' header
         CreateRequest.CompCodeExt = TbCompanyCode.Text
         CreateRequest.BusinessEntityNumberExt = TbSite.Text
         CreateRequest.BusEntity.BusinessEntityText = TbNameOfSite.Text
 
-        'general data
-        CreateRequest.BusEntity.ObjectValidFrom = ConvertDateToSAP(DtpBusEntityValidFrom.Value)
-        CreateRequest.BusEntity.ObjectValidTo = ConvertDateToSAP(DtpBusEntityValidTo.Value)
+        ' general data
+        If Not IsValidDate(TbBusEntityValidFrom.Text) Then
+            MessageBox.Show("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        Else
+            CreateRequest.BusEntity.ObjectValidFrom = TbBusEntityValidFrom.Text
+        End If
+        If Not IsValidDate(TbBusEntityValidTo.Text) Then
+            MessageBox.Show("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        Else
+            CreateRequest.BusEntity.ObjectValidFrom = TbBusEntityValidTo.Text
+        End If
 
         CreateRequest.ObjectAddress.AddressText = TbObjectDescr.Text
         CreateRequest.ObjectAddress.StreetLng = TbStreet.Text
@@ -161,27 +203,33 @@
             CreateRequest.ObjectAddress.Country = kvp.Key
         End If
 
-        'reference factors
+        ' reference factors
         Dim TenancyLawKvp = DirectCast(CombTenancyLaw.SelectedItem, KeyValuePair(Of String, String))
         If TenancyLawKvp.Value <> Nothing Then
             CreateRequest.BusEntity.TenancyLaw = TenancyLawKvp.Key
         End If
 
-        'posting parameters
-        Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
-            .TermNo = " ", 'TODO?
-            .ValidFrom = "0001-01-01", '01.01.0001 'TODO?
-            .BusArea = TbBusinessArea.Text,
-            .ProfitCtr = TbProfitCenter.Text
-        }
-        CreateRequest.TermOrgAssignment = {TermOaDat}
+        ' posting parameters
+        If Not TbTermOrgAssignmentValidFrom.Text = Nothing Then
+            If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
+                MessageBox.Show("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+            Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
+                .TermNo = TbTermOrgAssignmentNumber.Text, ' can be empty (default value)
+                .ValidFrom = TbTermOrgAssignmentValidFrom.Text,
+                .BusArea = TbBusinessArea.Text,
+                .ProfitCtr = TbProfitCenter.Text
+            }
+            CreateRequest.TermOrgAssignment = {TermOaDat}
+        End If
 
-        'create entity
+        ' create entity
         CreateResponse = sap_proxy.BusinessEntityREFXCreate(CreateRequest)
 
         If Not CheckErrors(CreateResponse.Return) Then
             MessageBox.Show("Wirtschaftseinheit " & CreateResponse.BusinessEntityNumber & " wurde im Buchungskreis " & CreateResponse.CompCode & " erstellt", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            CommitWork()
+            CommitWork(False)
         Else
             RollbackWork()
         End If
@@ -197,58 +245,93 @@
         ChangeRequest.CompCode = TbCompanyCode.Text
         ChangeRequest.BusinessEntityNumber = TbSite.Text
 
-        'TODO find out what has changed and set corresponding fields
-
-        'struct initialization
+        ' struct initialization
         ChangeRequest.BusEntity = New BusinessEntity.ReBusEntityDat()
         ChangeRequest.ObjectAddress = New BusinessEntity.ReObjAddressDat()
 
         ChangeRequest.BusEntityX = New BusinessEntity.ReBusEntityDatx()
         ChangeRequest.ObjectAddressX = New BusinessEntity.ReObjAddressDatx()
 
-        'header
-        ChangeRequest.BusEntity.BusinessEntityText = TbNameOfSite.Text
-        ChangeRequest.BusEntityX.BusinessEntityText = "X"
+        ' header
+        If Not TbNameOfSite.Text.Equals(BE_Instance.NameOfSite) Then
+            ChangeRequest.BusEntity.BusinessEntityText = TbNameOfSite.Text
+            ChangeRequest.BusEntityX.BusinessEntityText = "X"
+        End If
 
-        'general data
-        ChangeRequest.BusEntity.ObjectValidFrom = ConvertDateToSAP(DtpBusEntityValidFrom.Value)
-        ChangeRequest.BusEntityX.ObjectValidFrom = "X"
-        ChangeRequest.BusEntity.ObjectValidTo = ConvertDateToSAP(DtpBusEntityValidTo.Value)
-        ChangeRequest.BusEntityX.ObjectValidTo = "X"
+        ' general data
+        If Not IsValidDate(TbBusEntityValidFrom.Text) Then
+            MessageBox.Show("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        If Not TbBusEntityValidFrom.Text.Equals(BE_Instance.BE_ValidFrom) Then
+            ChangeRequest.BusEntity.ObjectValidFrom = TbBusEntityValidFrom.Text
+            ChangeRequest.BusEntityX.ObjectValidFrom = "X"
+        End If
 
-        ChangeRequest.ObjectAddress.AddressText = TbObjectDescr.Text
-        ChangeRequest.ObjectAddressX.AddressText = "X"
-        ChangeRequest.ObjectAddress.StreetLng = TbStreet.Text
-        ChangeRequest.ObjectAddressX.StreetLng = "X"
-        ChangeRequest.ObjectAddress.HouseNo = TbHouseno.Text
-        ChangeRequest.ObjectAddressX.HouseNo = "X"
-        ChangeRequest.ObjectAddress.PostlCod1 = TbPostcode.Text
-        ChangeRequest.ObjectAddressX.PostlCod1 = "X"
-        ChangeRequest.ObjectAddress.City = TbCity.Text
-        ChangeRequest.ObjectAddressX.City = "X"
-        ChangeRequest.ObjectAddress.Country = CombCountry.SelectedValue
-        ChangeRequest.ObjectAddressX.Country = "X"
+        If Not IsValidDate(TbBusEntityValidTo.Text) Then
+            MessageBox.Show("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+        If Not TbBusEntityValidTo.Text.Equals(BE_Instance.BE_ValidTo) Then
+            ChangeRequest.BusEntity.ObjectValidFrom = TbBusEntityValidTo.Text
+            ChangeRequest.BusEntityX.ObjectValidTo = "X"
+        End If
 
-        'reference factors
-        ChangeRequest.BusEntity.TenancyLaw = CombTenancyLaw.SelectedValue
-        ChangeRequest.BusEntityX.TenancyLaw = "X"
+        If Not TbObjectDescr.Text.Equals(BE_Instance.ObjectDescr) Then
+            ChangeRequest.ObjectAddress.AddressText = TbObjectDescr.Text
+            ChangeRequest.ObjectAddressX.AddressText = "X"
+        End If
+        If Not TbStreet.Text.Equals(BE_Instance.Street) Then
+            ChangeRequest.ObjectAddress.StreetLng = TbStreet.Text
+            ChangeRequest.ObjectAddressX.StreetLng = "X"
+        End If
+        If Not TbHouseno.Text.Equals(BE_Instance.HouseNo) Then
+            ChangeRequest.ObjectAddress.HouseNo = TbHouseno.Text
+            ChangeRequest.ObjectAddressX.HouseNo = "X"
+        End If
+        If Not TbPostcode.Text.Equals(BE_Instance.Postcode) Then
+            ChangeRequest.ObjectAddress.PostlCod1 = TbPostcode.Text
+            ChangeRequest.ObjectAddressX.PostlCod1 = "X"
+        End If
+        If Not TbCity.Text.Equals(BE_Instance.City) Then
+            ChangeRequest.ObjectAddress.City = TbCity.Text
+            ChangeRequest.ObjectAddressX.City = "X"
+        End If
+        If Not CombCountry.SelectedValue.Equals(BE_Instance.Country) Then
+            ChangeRequest.ObjectAddress.Country = CombCountry.SelectedValue
+            ChangeRequest.ObjectAddressX.Country = "X"
+        End If
 
-        'posting paramters
-        Dim TermOrgAssignment As New BusinessEntity.ReTermOaDatc With {
-            .ChangeIndicator = "U", 'TODO/ possible indicators are ' ' for ignore, 'I' for insert, 'U' for update, 'D' for delete
-            .TermNo = TbTermOrgAssignmentNumber.Text, 'mandatory for identification
-            .ValidFrom = ConvertDateToSAP(DtpTermOrgAssignmentValidFrom.Value), 'mandatory for identification
-            .BusArea = TbBusinessArea.Text,
-            .ProfitCtr = TbProfitCenter.Text
-        }
-        ChangeRequest.TermOrgAssignment = {TermOrgAssignment}
+        ' reference factors
+        If Not CombTenancyLaw.SelectedValue.Equals(BE_Instance.TenancyLaw) Then
+            ChangeRequest.BusEntity.TenancyLaw = CombTenancyLaw.SelectedValue
+            ChangeRequest.BusEntityX.TenancyLaw = "X"
+        End If
 
-        'change the site
+        ' posting parameters
+        If Not TbTermOrgAssignmentNumber.Text.Equals(BE_Instance.TermNo) Or Not TbTermOrgAssignmentValidFrom.Text.Equals(BE_Instance.OA_ValidFrom) Or Not TbBusinessArea.Text.Equals(BE_Instance.BusinessArea) Or Not TbProfitCenter.Text.Equals(BE_Instance.Proficenter) Then
+            If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
+                MessageBox.Show("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+
+            ' TODO make insert option possible
+            Dim TermOrgAssignment As New BusinessEntity.ReTermOaDatc With {
+                .ChangeIndicator = "U", ' possible indicators are ' ' for ignore, 'I' for insert, 'U' for update, 'D' for delete
+                .TermNo = TbTermOrgAssignmentNumber.Text, ' mandatory for identification
+                .ValidFrom = TbTermOrgAssignmentValidFrom.Text, ' mandatory for identification
+                .BusArea = TbBusinessArea.Text,
+                .ProfitCtr = TbProfitCenter.Text
+            }
+            ChangeRequest.TermOrgAssignment = {TermOrgAssignment}
+        End If
+
+        ' change the site
         ChangeResponse = sap_proxy.BusinessEntityREFXChange(ChangeRequest)
 
         If Not CheckErrors(ChangeResponse.Return) Then
             MessageBox.Show("Wirtschaftseinheit " & TbSite.Text & " wurde im Buchungskreis " & TbCompanyCode.Text & " geändert", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            CommitWork()
+            CommitWork(False)
         Else
             RollbackWork()
         End If
@@ -260,6 +343,8 @@
     ''' <param name="CompanyCode">Company code of the site</param>
     ''' <param name="BusinessEntityNumber">The number of the site</param>
     Private Sub GetDetail(CompanyCode As String, BusinessEntityNumber As String)
+        BtnNew.PerformClick()
+
         Dim DetailRequest As New BusinessEntity.BusinessEntityREFXGetDetail()
         Dim DetailResponse As BusinessEntity.BusinessEntityREFXGetDetailResponse
 
@@ -268,14 +353,18 @@
 
         DetailResponse = sap_proxy.BusinessEntityREFXGetDetail(DetailRequest)
 
-        'header
+        ' header
         TbCompanyCode.Text = DetailResponse.BusEntity.CompCode
         TbSite.Text = DetailResponse.BusEntity.BusinessEntity
         TbNameOfSite.Text = DetailResponse.BusEntity.BusinessEntityText
 
-        'general data
-        DtpBusEntityValidFrom.Value = ConvertDateToInternal(DetailResponse.BusEntity.ObjectValidFrom, DtpBusEntityValidFrom.MinDate, DtpBusEntityValidFrom.MaxDate)
-        DtpBusEntityValidTo.Value = ConvertDateToInternal(DetailResponse.BusEntity.ObjectValidTo, DtpBusEntityValidTo.MinDate, DtpBusEntityValidTo.MaxDate)
+        BE_Instance.CompanyCode = TbCompanyCode.Text
+        BE_Instance.Site = TbSite.Text
+        BE_Instance.NameOfSite = TbNameOfSite.Text
+
+        ' general data
+        TbBusEntityValidFrom.Text = DetailResponse.BusEntity.ObjectValidFrom
+        TbBusEntityValidTo.Text = DetailResponse.BusEntity.ObjectValidTo
 
         TbObjectDescr.Text = DetailResponse.ObjectAddress.AddressText
         TbStreet.Text = DetailResponse.ObjectAddress.StreetLng
@@ -284,16 +373,32 @@
         TbCity.Text = DetailResponse.ObjectAddress.City
         CombCountry.SelectedValue = DetailResponse.ObjectAddress.Country
 
-        'reference factors
+        BE_Instance.BE_ValidFrom = TbBusEntityValidFrom.Text
+        BE_Instance.BE_ValidTo = TbBusEntityValidTo.Text
+        BE_Instance.ObjectDescr = TbObjectDescr.Text
+        BE_Instance.Street = TbStreet.Text
+        BE_Instance.HouseNo = TbHouseno.Text
+        BE_Instance.Postcode = TbPostcode.Text
+        BE_Instance.City = TbCity.Text
+        BE_Instance.Country = CombCountry.SelectedValue
+
+        ' reference factors
         CombTenancyLaw.SelectedValue = DetailResponse.BusEntity.TenancyLaw
 
-        'posting parameters
-        'assuming there is only one posting parameter
+        BE_Instance.TenancyLaw = CombTenancyLaw.SelectedValue
+
+        ' posting parameters
+        ' assuming there is only one posting parameter
         Dim TermOrgAssignment = DetailResponse.TermOrgAssignment.ElementAt(0)
         TbTermOrgAssignmentNumber.Text = TermOrgAssignment.TermNo
-        DtpTermOrgAssignmentValidFrom.Value = ConvertDateToInternal(TermOrgAssignment.ValidFrom, DtpTermOrgAssignmentValidFrom.MinDate, DtpTermOrgAssignmentValidFrom.MaxDate)
+        TbTermOrgAssignmentValidFrom.Text = TermOrgAssignment.ValidFrom
         TbBusinessArea.Text = TermOrgAssignment.BusArea
         TbProfitCenter.Text = TermOrgAssignment.ProfitCtr
+
+        BE_Instance.TermNo = TbTermOrgAssignmentNumber.Text
+        BE_Instance.OA_ValidFrom = TbTermOrgAssignmentValidFrom.Text
+        BE_Instance.BusinessArea = TbBusinessArea.Text
+        BE_Instance.Proficenter = TbProfitCenter.Text
     End Sub
 
     ''' <summary>
@@ -337,9 +442,15 @@
             If BtnCreate.Enabled = False Then
                 BtnCreate.Enabled = True
             End If
+            If BtnChange.Enabled = False Then
+                BtnChange.Enabled = True
+            End If
         Else
             If BtnCreate.Enabled = True Then
                 BtnCreate.Enabled = False
+            End If
+            If BtnChange.Enabled = True Then
+                BtnChange.Enabled = False
             End If
         End If
 
@@ -379,16 +490,23 @@
     ''' <summary>
     ''' Submits a commit
     ''' </summary>
-    Private Sub CommitWork()
+    Private Sub CommitWork(ByVal DoWait As Boolean)
         Dim CommitRequest As New BusinessEntity.BapiServiceTransactionCommit()
         Dim CommitResponse As BusinessEntity.BapiServiceTransactionCommitResponse
 
-        CommitRequest.WAIT = "X"
+        If DoWait Then
+            CommitRequest.WAIT = "X"
+        Else
+            CommitRequest.WAIT = Nothing
+        End If
         CommitResponse = sap_proxy.BapiServiceTransactionCommit(CommitRequest)
 
-        If CommitResponse.Return.Type = "E" Then
-            MessageBox.Show(CommitResponse.Return.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            RollbackWork()
+        ' return messages are only received when a commit and wait is executed
+        If DoWait Then
+            If CommitResponse.Return.Type = "E" Then
+                MessageBox.Show(CommitResponse.Return.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                RollbackWork()
+            End If
         End If
     End Sub
 
@@ -398,7 +516,7 @@
     Private Sub RollbackWork()
         Dim RollbackRequest As New BusinessEntity.BapiServiceTransactionRollback()
 
-        'no return messages are received in case of an error here
+        ' no return messages are received in case of an error here
         sap_proxy.BapiServiceTransactionRollback(RollbackRequest)
     End Sub
 
@@ -415,22 +533,22 @@
 
         DateSAP = Value
 
-        'year
+        ' year
         If Value.Substring(0, 4) = "0000" Then
             Value = "0001" & Value.Substring(4)
         End If
-        'month
+        ' month
         If Value.Substring(5, 2) = "00" Then
             Value = Value.Substring(0, 5) & "01" & Value.Substring(7)
         End If
-        'day
+        ' day
         If Value.Substring(8, 2) = "00" Then
             Value = Value.Substring(0, 8) & "01"
         End If
 
-        ConvertedDate = New Date(Value.Substring(0, 4), Value.Substring(5, 2), Value.Substring(8, 2), 0, 0, 0)
+        ConvertedDate = New Date(Value.Substring(0, 4), Value.Substring(5, 2), Value.Substring(8, 2))
 
-        'check bounds
+        ' check bounds
         If ConvertedDate < MinDate Then
             ConvertedDate = MinDate
         ElseIf ConvertedDate > MaxDate Then
@@ -440,13 +558,18 @@
         Return ConvertedDate
     End Function
 
-    Private Function ConvertDateToSAP(ByVal Value As String) As Date
-        Dim ConvertedDate As Date
+    Private Function ConvertDateToSAP(ByVal Value As String) As String
+        Dim ConvertedDate As String
 
-        'TODO implement function
-        ConvertedDate = New Date() ' format: 2018-12-06
+        ' format: 9999-12-31
+        ConvertedDate = Value.Substring(6, 4) & "-" & Value.Substring(3, 2) & "-" & Value.Substring(0, 2)
 
         Return ConvertedDate
+    End Function
+
+    Private Function IsValidDate(ByVal Value As String) As Boolean
+        ' valid dates have the format yyyy-mm-dd
+        Return Regex.IsMatch(Value, "(\d{4})\-(0[1-9]|1[012])\-(0[1-9]|1[0-9]|2[0-9]|3[01])")
     End Function
 
     Private Sub OnKeyUpInTbCompanyCodeList(sender As Object, e As KeyEventArgs) Handles TbCompanyCodeList.KeyUp
@@ -465,51 +588,19 @@
     End Sub
 
     Private Sub OnKeyUpInTbCompanyCode(sender As Object, e As KeyEventArgs) Handles TbCompanyCode.KeyUp
-        If MandatoryFieldsFilled() Then
-            If BtnCreate.Enabled = False Then
-                BtnCreate.Enabled = True
-            End If
-        Else
-            If BtnCreate.Enabled = True Then
-                BtnCreate.Enabled = False
-            End If
-        End If
+        MandatoryFieldsFilled()
     End Sub
 
     Private Sub OnKeyUpInTbSite(sender As Object, e As KeyEventArgs) Handles TbSite.KeyUp
-        If MandatoryFieldsFilled() Then
-            If BtnCreate.Enabled = False Then
-                BtnCreate.Enabled = True
-            End If
-        Else
-            If BtnCreate.Enabled = True Then
-                BtnCreate.Enabled = False
-            End If
-        End If
+        MandatoryFieldsFilled()
     End Sub
 
     Private Sub OnKeyUpInTbNameOfSite(sender As Object, e As KeyEventArgs) Handles TbNameOfSite.KeyUp
-        If MandatoryFieldsFilled() Then
-            If BtnCreate.Enabled = False Then
-                BtnCreate.Enabled = True
-            End If
-        Else
-            If BtnCreate.Enabled = True Then
-                BtnCreate.Enabled = False
-            End If
-        End If
+        MandatoryFieldsFilled()
     End Sub
 
     Private Sub OnSelectedIndexChangeInCombTenancyLaw(sender As Object, e As EventArgs) Handles CombTenancyLaw.SelectedIndexChanged
-        If MandatoryFieldsFilled() Then
-            If BtnCreate.Enabled = False Then
-                BtnCreate.Enabled = True
-            End If
-        Else
-            If BtnCreate.Enabled = True Then
-                BtnCreate.Enabled = False
-            End If
-        End If
+        MandatoryFieldsFilled()
     End Sub
 
     ''' <summary>
@@ -517,11 +608,14 @@
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
-    Private Sub LblMandatoryFields_Click(sender As Object, e As EventArgs) Handles LblMandatoryFields.Click
+    Private Sub LblHelp_Click(sender As Object, e As EventArgs) Handles LblHelp.Click
         MessageBox.Show("Pflichtfelder unabhängig des Buchungskreises:" + Environment.NewLine +
                         " * Buchungskreis" + Environment.NewLine +
                         " * Wirtschaftseinheit" + Environment.NewLine +
                         " * Bezeichnung der WE" + Environment.NewLine +
-                        " * Bezugsgrößen - Mietrecht", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        " * Bezugsgrößen - Mietrecht" + Environment.NewLine +
+                        "" + Environment.NewLine +
+                        "Eingabehilfe:" + Environment.NewLine +
+                        " * Datum im Format: YYYY-MM-DD", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 End Class
