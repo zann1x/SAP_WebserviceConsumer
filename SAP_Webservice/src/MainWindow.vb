@@ -37,6 +37,7 @@ Public Class MainWindow
         sap_proxy.ClientCredentials.UserName.UserName = "IDES-032"
         sap_proxy.ClientCredentials.UserName.Password = "ipofipup"
 
+        TbCompanyCodeList.Text = "0001"
         GetList()
     End Sub
 
@@ -97,18 +98,24 @@ Public Class MainWindow
         CombCountry.DisplayMember = "Value"
         CombCountry.ValueMember = "Key"
 
+        'init other fields
+        IsEditing = False
         BtnNew.PerformClick()
     End Sub
 
     ''' <summary>
-    ''' Handles the click on button BtnNew
+    ''' Handles the click on the "new" button
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
         BE_Instance = New S_BusinessEntity
 
+        BtnCreate.Enabled = False
         BtnChange.Enabled = False
+        TbCompanyCode.ReadOnly = False
+        TbSite.ReadOnly = False
+        IsEditing = False
 
         ' header
         TbCompanyCode.Clear()
@@ -137,7 +144,7 @@ Public Class MainWindow
     End Sub
 
     ''' <summary>
-    ''' Handles the click on button BtnCreate
+    ''' Handles the click on the "create" button
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
@@ -146,7 +153,7 @@ Public Class MainWindow
     End Sub
 
     ''' <summary>
-    ''' Handles the click on button BtnChange
+    ''' Handles the click on the "change" button
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
@@ -155,7 +162,7 @@ Public Class MainWindow
     End Sub
 
     ''' <summary>
-    ''' Handles the click on button BtnRefresh
+    ''' Handles the click on the "refresh" button
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
@@ -225,7 +232,18 @@ Public Class MainWindow
         End If
 
         ' create entity
-        CreateResponse = sap_proxy.BusinessEntityREFXCreate(CreateRequest)
+        Try
+            CreateResponse = sap_proxy.BusinessEntityREFXCreate(CreateRequest)
+        Catch Ex As System.ServiceModel.Security.MessageSecurityException
+            ShowSecurityErrorMessage()
+            Return
+        Catch Ex As TimeoutException
+            ShowTimeoutErrorMessage()
+            Return
+        Catch Ex As Exception
+            ShowGeneralErrorMessage(Ex)
+            Return
+        End Try
 
         If Not CheckErrors(CreateResponse.Return) Then
             MessageBox.Show("Wirtschaftseinheit " & CreateResponse.BusinessEntityNumber & " wurde im Buchungskreis " & CreateResponse.CompCode & " erstellt", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -327,7 +345,18 @@ Public Class MainWindow
         End If
 
         ' change the site
-        ChangeResponse = sap_proxy.BusinessEntityREFXChange(ChangeRequest)
+        Try
+            ChangeResponse = sap_proxy.BusinessEntityREFXChange(ChangeRequest)
+        Catch Ex As System.ServiceModel.Security.MessageSecurityException
+            ShowSecurityErrorMessage()
+            Return
+        Catch Ex As TimeoutException
+            ShowTimeoutErrorMessage()
+            Return
+        Catch Ex As Exception
+            ShowGeneralErrorMessage(Ex)
+            Return
+        End Try
 
         If Not CheckErrors(ChangeResponse.Return) Then
             MessageBox.Show("Wirtschaftseinheit " & TbSite.Text & " wurde im Buchungskreis " & TbCompanyCode.Text & " geändert", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -351,7 +380,25 @@ Public Class MainWindow
         DetailRequest.CompCode = CompanyCode
         DetailRequest.BusinessEntityNumber = BusinessEntityNumber
 
-        DetailResponse = sap_proxy.BusinessEntityREFXGetDetail(DetailRequest)
+        Try
+            DetailResponse = sap_proxy.BusinessEntityREFXGetDetail(DetailRequest)
+        Catch Ex As System.ServiceModel.Security.MessageSecurityException
+            ShowSecurityErrorMessage()
+            Return
+        Catch Ex As TimeoutException
+            ShowTimeoutErrorMessage()
+            Return
+        Catch Ex As Exception
+            ShowGeneralErrorMessage(Ex)
+            Return
+        End Try
+
+        'restrict functionality so the user actually only changes the selected site
+        BtnCreate.Enabled = False
+        BtnChange.Enabled = True
+        TbCompanyCode.ReadOnly = True
+        TbSite.ReadOnly = True
+        IsEditing = True
 
         ' header
         TbCompanyCode.Text = DetailResponse.BusEntity.CompCode
@@ -418,9 +465,20 @@ Public Class MainWindow
         Dim ReSeloption = {Seloption1}
         ListRequest.Seloption = ReSeloption
 
-        ListResponse = sap_proxy.BusinessEntityREFXGetList(ListRequest)
-
         LbxItems.Items.Clear()
+        Try
+            ListResponse = sap_proxy.BusinessEntityREFXGetList(ListRequest)
+        Catch Ex As System.ServiceModel.Security.MessageSecurityException
+            ShowSecurityErrorMessage()
+            Return
+        Catch Ex As TimeoutException
+            ShowTimeoutErrorMessage()
+            Return
+        Catch Ex As Exception
+            ShowGeneralErrorMessage(Ex)
+            Return
+        End Try
+
         If Not CheckErrors(ListResponse.Return) Then
             For Each BusEntity As BusinessEntity.ReBusEntity In ListResponse.BusEntity
                 LbxItems.Items.Add(BusEntity.IdentKey)
@@ -439,19 +497,16 @@ Public Class MainWindow
         FieldsFilled = TbCompanyCode.Text.Length > 0 And TbSite.Text.Length > 0 And TbNameOfSite.Text.Length > 0 And CombTenancyLaw.SelectedIndex <> 0
 
         If FieldsFilled Then
-            If BtnCreate.Enabled = False Then
-                BtnCreate.Enabled = True
-            End If
-            If BtnChange.Enabled = False Then
-                BtnChange.Enabled = True
-            End If
-        Else
-            If BtnCreate.Enabled = True Then
+            If IsEditing Then
                 BtnCreate.Enabled = False
-            End If
-            If BtnChange.Enabled = True Then
+                BtnChange.Enabled = True
+            Else
+                BtnCreate.Enabled = True
                 BtnChange.Enabled = False
             End If
+        Else
+            BtnCreate.Enabled = False
+            BtnChange.Enabled = False
         End If
 
         Return FieldsFilled
@@ -579,6 +634,10 @@ Public Class MainWindow
     End Sub
 
     Private Sub OnSelectedIndexChangedInLbxItems(sender As Object, e As EventArgs) Handles LbxItems.SelectedIndexChanged
+        If LbxItems.SelectedItem() = Nothing Then
+            Return
+        End If
+
         Dim CompanyCode = LbxItems.SelectedItem().ToString().Substring(0, 4)
         Dim BusinessEntityNumber = LbxItems.SelectedItem().ToString().Substring(5)
 
@@ -608,14 +667,7 @@ Public Class MainWindow
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
-    Private Sub LblHelp_Click(sender As Object, e As EventArgs) Handles LblHelp.Click
-        MessageBox.Show("Pflichtfelder unabhängig des Buchungskreises:" + Environment.NewLine +
-                        " * Buchungskreis" + Environment.NewLine +
-                        " * Wirtschaftseinheit" + Environment.NewLine +
-                        " * Bezeichnung der WE" + Environment.NewLine +
-                        " * Bezugsgrößen - Mietrecht" + Environment.NewLine +
-                        "" + Environment.NewLine +
-                        "Eingabehilfe:" + Environment.NewLine +
-                        " * Datum im Format: YYYY-MM-DD", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    Private Sub BtnHelp_Click(sender As Object, e As EventArgs) Handles BtnHelp.Click
+        ShowHelpMessage()
     End Sub
 End Class

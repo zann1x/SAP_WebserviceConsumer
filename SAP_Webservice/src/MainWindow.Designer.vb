@@ -53,6 +53,7 @@ Partial Class MainWindow
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.TpPostingParameters = New System.Windows.Forms.TabPage()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.TbTermOrgAssignmentValidFrom = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -73,8 +74,7 @@ Partial Class MainWindow
         Me.BtnRefreshList = New System.Windows.Forms.Button()
         Me.TbCompanyCodeList = New System.Windows.Forms.TextBox()
         Me.Splitter1 = New System.Windows.Forms.Splitter()
-        Me.LblHelp = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.BtnHelp = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TpGeneralData.SuspendLayout()
         Me.TpReferenceFactors.SuspendLayout()
@@ -391,6 +391,15 @@ Partial Class MainWindow
         Me.TpPostingParameters.TabIndex = 5
         Me.TpPostingParameters.Text = "Buchungsparameter"
         '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(220, 8)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(105, 13)
+        Me.Label3.TabIndex = 11
+        Me.Label3.Text = "(Standardwert = leer)"
+        '
         'TbTermOrgAssignmentValidFrom
         '
         Me.TbTermOrgAssignmentValidFrom.Location = New System.Drawing.Point(114, 31)
@@ -532,9 +541,9 @@ Partial Class MainWindow
         Me.LblExistingSites.AutoSize = True
         Me.LblExistingSites.Location = New System.Drawing.Point(12, 339)
         Me.LblExistingSites.Name = "LblExistingSites"
-        Me.LblExistingSites.Size = New System.Drawing.Size(240, 13)
+        Me.LblExistingSites.Size = New System.Drawing.Size(250, 13)
         Me.LblExistingSites.TabIndex = 13
-        Me.LblExistingSites.Text = "Vorhandene Wirtschaftseinheiten Buchungskreis:"
+        Me.LblExistingSites.Text = "Vorhandene Wirtschaftseinheiten im Buchungskreis"
         '
         'BtnCreate
         '
@@ -558,12 +567,11 @@ Partial Class MainWindow
         '
         'TbCompanyCodeList
         '
-        Me.TbCompanyCodeList.Location = New System.Drawing.Point(258, 336)
+        Me.TbCompanyCodeList.Location = New System.Drawing.Point(270, 336)
         Me.TbCompanyCodeList.MaxLength = 4
         Me.TbCompanyCodeList.Name = "TbCompanyCodeList"
         Me.TbCompanyCodeList.Size = New System.Drawing.Size(40, 20)
         Me.TbCompanyCodeList.TabIndex = 17
-        Me.TbCompanyCodeList.Text = "0001"
         '
         'Splitter1
         '
@@ -573,25 +581,14 @@ Partial Class MainWindow
         Me.Splitter1.TabIndex = 18
         Me.Splitter1.TabStop = False
         '
-        'LblHelp
+        'BtnHelp
         '
-        Me.LblHelp.AutoSize = True
-        Me.LblHelp.BackColor = System.Drawing.SystemColors.Control
-        Me.LblHelp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.LblHelp.Location = New System.Drawing.Point(749, 6)
-        Me.LblHelp.Name = "LblHelp"
-        Me.LblHelp.Size = New System.Drawing.Size(39, 15)
-        Me.LblHelp.TabIndex = 19
-        Me.LblHelp.Text = "? Hilfe"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(220, 8)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(105, 13)
-        Me.Label3.TabIndex = 11
-        Me.Label3.Text = "(Standardwert = leer)"
+        Me.BtnHelp.Location = New System.Drawing.Point(743, 4)
+        Me.BtnHelp.Name = "BtnHelp"
+        Me.BtnHelp.Size = New System.Drawing.Size(45, 23)
+        Me.BtnHelp.TabIndex = 20
+        Me.BtnHelp.Text = "? Hilfe"
+        Me.BtnHelp.UseVisualStyleBackColor = True
         '
         'MainWindow
         '
@@ -600,7 +597,7 @@ Partial Class MainWindow
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.ClientSize = New System.Drawing.Size(800, 636)
-        Me.Controls.Add(Me.LblHelp)
+        Me.Controls.Add(Me.BtnHelp)
         Me.Controls.Add(Me.Splitter1)
         Me.Controls.Add(Me.TbCompanyCodeList)
         Me.Controls.Add(Me.BtnRefreshList)
@@ -672,7 +669,6 @@ Partial Class MainWindow
     Friend WithEvents TbBusinessArea As TextBox
     Friend WithEvents LblBusinessArea As Label
     Friend WithEvents Splitter1 As Splitter
-    Friend WithEvents LblHelp As Label
     Friend WithEvents TbTermOrgAssignmentNumber As TextBox
     Friend WithEvents LblTermOrgAssignmentNumber As Label
     Friend WithEvents LblTermOrgAssignmentValidFrom As Label
@@ -682,4 +678,5 @@ Partial Class MainWindow
     Friend WithEvents TbBusEntityValidFrom As TextBox
     Friend WithEvents TbTermOrgAssignmentValidFrom As TextBox
     Friend WithEvents Label3 As Label
+    Friend WithEvents BtnHelp As Button
 End Class
