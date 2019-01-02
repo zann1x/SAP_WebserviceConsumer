@@ -7,8 +7,24 @@
         MessageBox.Show("Nicht autorisierter Zugriff! Bitte überprüfen Sie Ihre Anmeldedaten oder wenden Sie sich an den Systemadministrator.", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Sub
 
-    Public Sub ShowGeneralErrorMessage(ByRef Ex As Exception)
+    Public Sub ShowExceptionMessage(ByRef Ex As Exception)
         MessageBox.Show(Ex.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    End Sub
+
+    Public Sub ShowErrorMessage(Text As String)
+        MessageBox.Show(Text, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    End Sub
+
+    Public Sub ShowWarningMessage(Text As String)
+        MessageBox.Show(Text, "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    End Sub
+
+    Public Sub ShowInfoMessage(Text As String)
+        MessageBox.Show(Text, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    End Sub
+
+    Public Sub ShowCustomMessage(Text As String, Title As String, Buttons As MessageBoxButtons, Icon As MessageBoxIcon)
+        MessageBox.Show(Text, Title, Buttons, Icon)
     End Sub
 
     Public Sub ShowHelpMessage()

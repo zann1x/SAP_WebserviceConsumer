@@ -189,13 +189,13 @@ Public Class MainWindow
 
         ' general data
         If Not IsValidDate(TbBusEntityValidFrom.Text) Then
-            MessageBox.Show("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)")
             Return
         Else
             CreateRequest.BusEntity.ObjectValidFrom = TbBusEntityValidFrom.Text
         End If
         If Not IsValidDate(TbBusEntityValidTo.Text) Then
-            MessageBox.Show("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)")
             Return
         Else
             CreateRequest.BusEntity.ObjectValidFrom = TbBusEntityValidTo.Text
@@ -220,7 +220,7 @@ Public Class MainWindow
         ' posting parameters
         If Not TbTermOrgAssignmentValidFrom.Text = Nothing Then
             If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
-                MessageBox.Show("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                ShowWarningMessage("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)")
                 Return
             End If
             Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
@@ -242,12 +242,11 @@ Public Class MainWindow
             ShowTimeoutErrorMessage()
             Return
         Catch Ex As Exception
-            ShowGeneralErrorMessage(Ex)
+            ShowExceptionMessage(Ex)
             Return
         End Try
 
-        If Not CheckErrors(CreateResponse.Return) Then
-            MessageBox.Show("Wirtschaftseinheit " & CreateResponse.BusinessEntityNumber & " wurde im Buchungskreis " & CreateResponse.CompCode & " erstellt", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        If Not CheckForErrors(CreateResponse.Return) Then
             CommitWork(False)
         Else
             RollbackWork()
@@ -279,7 +278,7 @@ Public Class MainWindow
 
         ' general data
         If Not IsValidDate(TbBusEntityValidFrom.Text) Then
-            MessageBox.Show("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)")
             Return
         End If
         If Not TbBusEntityValidFrom.Text.Equals(BE_Instance.BE_ValidFrom) Then
@@ -288,7 +287,7 @@ Public Class MainWindow
         End If
 
         If Not IsValidDate(TbBusEntityValidTo.Text) Then
-            MessageBox.Show("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)")
             Return
         End If
         If Not TbBusEntityValidTo.Text.Equals(BE_Instance.BE_ValidTo) Then
@@ -316,18 +315,24 @@ Public Class MainWindow
             ChangeRequest.ObjectAddress.City = TbCity.Text
             ChangeRequest.ObjectAddressX.City = "X"
         End If
-        If Not CombCountry.SelectedValue.Equals(BE_Instance.Country) Then
-            ChangeRequest.ObjectAddress.Country = CombCountry.SelectedValue
-            ChangeRequest.ObjectAddressX.Country = "X"
+        If Not CombCountry.SelectedValue = Nothing Then
+            If Not CombCountry.SelectedValue.Equals(BE_Instance.Country) Then
+                ChangeRequest.ObjectAddress.Country = CombCountry.SelectedValue
+                ChangeRequest.ObjectAddressX.Country = "X"
+            End If
         End If
 
+
         ' reference factors
-        If Not CombTenancyLaw.SelectedValue.Equals(BE_Instance.TenancyLaw) Then
-            ChangeRequest.BusEntity.TenancyLaw = CombTenancyLaw.SelectedValue
-            ChangeRequest.BusEntityX.TenancyLaw = "X"
+        If Not CombTenancyLaw.SelectedValue = Nothing Then
+            If Not CombTenancyLaw.SelectedValue.Equals(BE_Instance.TenancyLaw) Then
+                ChangeRequest.BusEntity.TenancyLaw = CombTenancyLaw.SelectedValue
+                ChangeRequest.BusEntityX.TenancyLaw = "X"
+            End If
         End If
 
         ' posting parameters
+        ' TODO rethink this again
         If Not TbTermOrgAssignmentNumber.Text.Equals(BE_Instance.TermNo) Or Not TbTermOrgAssignmentValidFrom.Text.Equals(BE_Instance.OA_ValidFrom) Or Not TbBusinessArea.Text.Equals(BE_Instance.BusinessArea) Or Not TbProfitCenter.Text.Equals(BE_Instance.Proficenter) Then
             If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
                 MessageBox.Show("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -355,12 +360,11 @@ Public Class MainWindow
             ShowTimeoutErrorMessage()
             Return
         Catch Ex As Exception
-            ShowGeneralErrorMessage(Ex)
+            ShowExceptionMessage(Ex)
             Return
         End Try
 
-        If Not CheckErrors(ChangeResponse.Return) Then
-            MessageBox.Show("Wirtschaftseinheit " & TbSite.Text & " wurde im Buchungskreis " & TbCompanyCode.Text & " geändert", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        If Not CheckForErrors(ChangeResponse.Return) Then
             CommitWork(False)
         Else
             RollbackWork()
@@ -390,7 +394,7 @@ Public Class MainWindow
             ShowTimeoutErrorMessage()
             Return
         Catch Ex As Exception
-            ShowGeneralErrorMessage(Ex)
+            ShowExceptionMessage(Ex)
             Return
         End Try
 
@@ -476,16 +480,16 @@ Public Class MainWindow
             ShowTimeoutErrorMessage()
             Return
         Catch Ex As Exception
-            ShowGeneralErrorMessage(Ex)
+            ShowExceptionMessage(Ex)
             Return
         End Try
 
-        If Not CheckErrors(ListResponse.Return) Then
+        If Not CheckForErrors(ListResponse.Return) Then
             For Each BusEntity As BusinessEntity.ReBusEntity In ListResponse.BusEntity
                 LbxItems.Items.Add(BusEntity.IdentKey)
             Next
         Else
-            MessageBox.Show("Wirtschaftseinheiten des Buchungskreises " & TbCompanyCodeList.Text & " konnten nicht abgefragt werden", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ShowErrorMessage("Wirtschaftseinheiten des Buchungskreises " & TbCompanyCodeList.Text & " konnten nicht abgefragt werden")
         End If
     End Sub
 
@@ -518,27 +522,35 @@ Public Class MainWindow
     ''' </summary>
     ''' <param name="ReturnList">List of return messages</param>
     ''' <returns>true if an error occurred, false otherwise</returns>
-    Private Function CheckErrors(ByRef ReturnList As BusinessEntity.Bapiret2()) As Boolean
+    Private Function CheckForErrors(ByRef ReturnList As BusinessEntity.Bapiret2()) As Boolean
+        Dim Message As String = ""
         Dim ErrorOccured As Boolean = False
 
         For Each ReturnElement As BusinessEntity.Bapiret2 In ReturnList
-            If ReturnElement.Type = "S" Or ReturnElement.Type = "I" Or ReturnElement.Type = "W" Then
-                'If ReturnElement.Type = "I" Then
-                '    MessageBox.Show(ReturnElement.Message, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                'Else
-                If ReturnElement.Type = "W" Then
-                    Dim result As DialogResult
-                    result = MessageBox.Show(ReturnElement.Message & Environment.NewLine & "Wollen Sie dennoch fortfahren (nicht empfohlen)?", "Warnung", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
-                    If result = DialogResult.No Then
-                        ErrorOccured = True
-                    End If
-                End If
-                'End If
-            ElseIf ReturnElement.Type = "E" Or ReturnElement.Type = "A" Then
-                MessageBox.Show(ReturnElement.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            If ReturnElement.Type = "S" Then
+                Message = Message & "* Erfolg: " & ReturnElement.Message & Environment.NewLine
+            ElseIf ReturnElement.Type = "I" Then
+                Message = Message & "* Info: " & ReturnElement.Message & Environment.NewLine
+            ElseIf ReturnElement.Type = "W" Then
+                Message = Message & "* Warnung: " & ReturnElement.Message & Environment.NewLine
+            ElseIf ReturnElement.Type = "E" Then
+                Message = Message & "* Fehler: " & ReturnElement.Message & Environment.NewLine
+                ErrorOccured = True
+            ElseIf ReturnElement.Type = "A" Then
+                Message = Message & "* Abbruch: " & ReturnElement.Message & Environment.NewLine
                 ErrorOccured = True
             End If
         Next
+
+        If Message <> Nothing Then
+            Dim Icon As MessageBoxIcon
+            If ErrorOccured Then
+                Icon = MessageBoxIcon.Error
+            Else
+                Icon = MessageBoxIcon.Information
+            End If
+            ShowCustomMessage(Message, "Meldungen zur Wirtschaftseinheit", MessageBoxButtons.OK, Icon)
+        End If
 
         Return ErrorOccured
     End Function
@@ -559,8 +571,7 @@ Public Class MainWindow
 
         ' return messages are only received when a commit and wait is executed
         If DoWait Then
-            If CommitResponse.Return.Type = "E" Then
-                MessageBox.Show(CommitResponse.Return.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            If CheckForErrors({CommitResponse.Return}) Then
                 RollbackWork()
             End If
         End If
