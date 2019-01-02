@@ -231,9 +231,9 @@ Partial Class MainWindow
         Me.LblObjectDescr.AutoSize = True
         Me.LblObjectDescr.Location = New System.Drawing.Point(1, 48)
         Me.LblObjectDescr.Name = "LblObjectDescr"
-        Me.LblObjectDescr.Size = New System.Drawing.Size(91, 13)
+        Me.LblObjectDescr.Size = New System.Drawing.Size(88, 13)
         Me.LblObjectDescr.TabIndex = 13
-        Me.LblObjectDescr.Text = "Obj.-Bezeichnung"
+        Me.LblObjectDescr.Text = "Obj-Bezeichnung"
         '
         'TbObjectDescr
         '

@@ -33,12 +33,12 @@ Public Class MainWindow
     Private Sub MainWindow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitControls()
 
-        sap_proxy = New BusinessEntity.Z_HH_BusinessEntityREFXClient()
-        sap_proxy.ClientCredentials.UserName.UserName = "IDES-032"
-        sap_proxy.ClientCredentials.UserName.Password = "ipofipup"
+        Proxy = New BusinessEntity.Z_HH_BusinessEntityREFXClient()
+        Proxy.ClientCredentials.UserName.UserName = "IDES-032"
+        Proxy.ClientCredentials.UserName.Password = "ipofipup"
 
         TbCompanyCodeList.Text = "0001"
-        GetList()
+        BtnRefreshList.PerformClick()
     End Sub
 
     ''' <summary>
@@ -150,6 +150,7 @@ Public Class MainWindow
     ''' <param name="e"></param>
     Private Sub BtnCreate_Click(sender As Object, e As EventArgs) Handles BtnCreate.Click
         CreateEntity()
+        BtnRefreshList.PerformClick()
     End Sub
 
     ''' <summary>
@@ -233,7 +234,7 @@ Public Class MainWindow
 
         ' create entity
         Try
-            CreateResponse = sap_proxy.BusinessEntityREFXCreate(CreateRequest)
+            CreateResponse = Proxy.BusinessEntityREFXCreate(CreateRequest)
         Catch Ex As System.ServiceModel.Security.MessageSecurityException
             ShowSecurityErrorMessage()
             Return
@@ -346,7 +347,7 @@ Public Class MainWindow
 
         ' change the site
         Try
-            ChangeResponse = sap_proxy.BusinessEntityREFXChange(ChangeRequest)
+            ChangeResponse = Proxy.BusinessEntityREFXChange(ChangeRequest)
         Catch Ex As System.ServiceModel.Security.MessageSecurityException
             ShowSecurityErrorMessage()
             Return
@@ -381,7 +382,7 @@ Public Class MainWindow
         DetailRequest.BusinessEntityNumber = BusinessEntityNumber
 
         Try
-            DetailResponse = sap_proxy.BusinessEntityREFXGetDetail(DetailRequest)
+            DetailResponse = Proxy.BusinessEntityREFXGetDetail(DetailRequest)
         Catch Ex As System.ServiceModel.Security.MessageSecurityException
             ShowSecurityErrorMessage()
             Return
@@ -467,7 +468,7 @@ Public Class MainWindow
 
         LbxItems.Items.Clear()
         Try
-            ListResponse = sap_proxy.BusinessEntityREFXGetList(ListRequest)
+            ListResponse = Proxy.BusinessEntityREFXGetList(ListRequest)
         Catch Ex As System.ServiceModel.Security.MessageSecurityException
             ShowSecurityErrorMessage()
             Return
@@ -554,7 +555,7 @@ Public Class MainWindow
         Else
             CommitRequest.WAIT = Nothing
         End If
-        CommitResponse = sap_proxy.BapiServiceTransactionCommit(CommitRequest)
+        CommitResponse = Proxy.BapiServiceTransactionCommit(CommitRequest)
 
         ' return messages are only received when a commit and wait is executed
         If DoWait Then
@@ -572,7 +573,7 @@ Public Class MainWindow
         Dim RollbackRequest As New BusinessEntity.BapiServiceTransactionRollback()
 
         ' no return messages are received in case of an error here
-        sap_proxy.BapiServiceTransactionRollback(RollbackRequest)
+        Proxy.BapiServiceTransactionRollback(RollbackRequest)
     End Sub
 
     ''' <summary>

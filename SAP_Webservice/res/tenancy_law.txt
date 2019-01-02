@@ -4,4 +4,3 @@
 4	Schweizer Mietrecht
 5	USA Mietrecht
 6	Japanisches Mietrecht
-7	Japanisches Mietrecht
