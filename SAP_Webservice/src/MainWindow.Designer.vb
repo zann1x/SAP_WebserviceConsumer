@@ -22,7 +22,7 @@ Partial Class MainWindow
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.LbxItems = New System.Windows.Forms.ListBox()
+        Me.components = New System.ComponentModel.Container()
         Me.LblCompanyCode = New System.Windows.Forms.Label()
         Me.BtnNew = New System.Windows.Forms.Button()
         Me.BtnChange = New System.Windows.Forms.Button()
@@ -75,19 +75,20 @@ Partial Class MainWindow
         Me.TbCompanyCodeList = New System.Windows.Forms.TextBox()
         Me.Splitter1 = New System.Windows.Forms.Splitter()
         Me.BtnHelp = New System.Windows.Forms.Button()
+        Me.DgvItems = New System.Windows.Forms.DataGridView()
+        Me.BE_CompanyCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BE_Number = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BE_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BusinessEntityREFXGetListResponseBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.BusinessEntityREFXGetListResponse1BindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.TabControl1.SuspendLayout()
         Me.TpGeneralData.SuspendLayout()
         Me.TpReferenceFactors.SuspendLayout()
         Me.TpPostingParameters.SuspendLayout()
+        CType(Me.DgvItems, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.BusinessEntityREFXGetListResponseBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.BusinessEntityREFXGetListResponse1BindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'LbxItems
-        '
-        Me.LbxItems.FormattingEnabled = True
-        Me.LbxItems.Location = New System.Drawing.Point(12, 360)
-        Me.LbxItems.Name = "LbxItems"
-        Me.LbxItems.Size = New System.Drawing.Size(776, 264)
-        Me.LbxItems.TabIndex = 2
         '
         'LblCompanyCode
         '
@@ -577,7 +578,7 @@ Partial Class MainWindow
         '
         Me.Splitter1.Location = New System.Drawing.Point(0, 0)
         Me.Splitter1.Name = "Splitter1"
-        Me.Splitter1.Size = New System.Drawing.Size(3, 636)
+        Me.Splitter1.Size = New System.Drawing.Size(3, 628)
         Me.Splitter1.TabIndex = 18
         Me.Splitter1.TabStop = False
         '
@@ -590,13 +591,60 @@ Partial Class MainWindow
         Me.BtnHelp.Text = "? Hilfe"
         Me.BtnHelp.UseVisualStyleBackColor = True
         '
+        'DgvItems
+        '
+        Me.DgvItems.AllowUserToAddRows = False
+        Me.DgvItems.AllowUserToDeleteRows = False
+        Me.DgvItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvItems.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.BE_CompanyCode, Me.BE_Number, Me.BE_Name})
+        Me.DgvItems.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
+        Me.DgvItems.Location = New System.Drawing.Point(12, 360)
+        Me.DgvItems.MultiSelect = False
+        Me.DgvItems.Name = "DgvItems"
+        Me.DgvItems.ReadOnly = True
+        Me.DgvItems.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.DgvItems.Size = New System.Drawing.Size(776, 256)
+        Me.DgvItems.TabIndex = 21
+        '
+        'BE_CompanyCode
+        '
+        Me.BE_CompanyCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.BE_CompanyCode.HeaderText = "Buchungskreis"
+        Me.BE_CompanyCode.Name = "BE_CompanyCode"
+        Me.BE_CompanyCode.ReadOnly = True
+        Me.BE_CompanyCode.Width = 102
+        '
+        'BE_Number
+        '
+        Me.BE_Number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.BE_Number.HeaderText = "Wirtschaftseinheit"
+        Me.BE_Number.Name = "BE_Number"
+        Me.BE_Number.ReadOnly = True
+        Me.BE_Number.Width = 116
+        '
+        'BE_Name
+        '
+        Me.BE_Name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.BE_Name.HeaderText = "Bezeichnung"
+        Me.BE_Name.Name = "BE_Name"
+        Me.BE_Name.ReadOnly = True
+        '
+        'BusinessEntityREFXGetListResponseBindingSource
+        '
+        Me.BusinessEntityREFXGetListResponseBindingSource.DataSource = GetType(SAP_Webservice.BusinessEntity.BusinessEntityREFXGetListResponse)
+        '
+        'BusinessEntityREFXGetListResponse1BindingSource
+        '
+        Me.BusinessEntityREFXGetListResponse1BindingSource.DataSource = GetType(SAP_Webservice.BusinessEntity.BusinessEntityREFXGetListResponse1)
+        '
         'MainWindow
         '
         Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ClientSize = New System.Drawing.Size(800, 636)
+        Me.ClientSize = New System.Drawing.Size(800, 628)
+        Me.Controls.Add(Me.DgvItems)
         Me.Controls.Add(Me.BtnHelp)
         Me.Controls.Add(Me.Splitter1)
         Me.Controls.Add(Me.TbCompanyCodeList)
@@ -612,7 +660,6 @@ Partial Class MainWindow
         Me.Controls.Add(Me.BtnChange)
         Me.Controls.Add(Me.BtnNew)
         Me.Controls.Add(Me.LblCompanyCode)
-        Me.Controls.Add(Me.LbxItems)
         Me.Name = "MainWindow"
         Me.Text = "BusinessEntityREFX"
         Me.TabControl1.ResumeLayout(False)
@@ -622,11 +669,13 @@ Partial Class MainWindow
         Me.TpReferenceFactors.PerformLayout()
         Me.TpPostingParameters.ResumeLayout(False)
         Me.TpPostingParameters.PerformLayout()
+        CType(Me.DgvItems, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.BusinessEntityREFXGetListResponseBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.BusinessEntityREFXGetListResponse1BindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents LbxItems As ListBox
     Friend WithEvents LblCompanyCode As Label
     Friend WithEvents BtnNew As Button
     Friend WithEvents BtnChange As Button
@@ -679,4 +728,10 @@ Partial Class MainWindow
     Friend WithEvents TbTermOrgAssignmentValidFrom As TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents BtnHelp As Button
+    Friend WithEvents DgvItems As DataGridView
+    Friend WithEvents BusinessEntityREFXGetListResponseBindingSource As BindingSource
+    Friend WithEvents BusinessEntityREFXGetListResponse1BindingSource As BindingSource
+    Friend WithEvents BE_CompanyCode As DataGridViewTextBoxColumn
+    Friend WithEvents BE_Number As DataGridViewTextBoxColumn
+    Friend WithEvents BE_Name As DataGridViewTextBoxColumn
 End Class

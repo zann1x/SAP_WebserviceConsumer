@@ -37,7 +37,7 @@ Public Class MainWindow
         Proxy.ClientCredentials.UserName.UserName = "IDES-032"
         Proxy.ClientCredentials.UserName.Password = "ipofipup"
 
-        TbCompanyCodeList.Text = "0001"
+        TbCompanyCodeList.Text = "1000"
         BtnRefreshList.PerformClick()
     End Sub
 
@@ -149,8 +149,9 @@ Public Class MainWindow
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Private Sub BtnCreate_Click(sender As Object, e As EventArgs) Handles BtnCreate.Click
-        CreateEntity()
-        BtnRefreshList.PerformClick()
+        If CreateEntity() Then
+            BtnRefreshList.PerformClick()
+        End If
     End Sub
 
     ''' <summary>
@@ -174,7 +175,8 @@ Public Class MainWindow
     ''' <summary>
     ''' Fills all fields and creates the site in the SAP system
     ''' </summary>
-    Private Sub CreateEntity()
+    ''' <returns>Returns true if successful, false otherwise</returns>
+    Private Function CreateEntity() As Boolean
         Dim CreateRequest As New BusinessEntity.BusinessEntityREFXCreate()
         Dim CreateResponse As BusinessEntity.BusinessEntityREFXCreateResponse
 
@@ -188,18 +190,21 @@ Public Class MainWindow
         CreateRequest.BusEntity.BusinessEntityText = TbNameOfSite.Text
 
         ' general data
-        If Not IsValidDate(TbBusEntityValidFrom.Text) Then
+        If TbBusEntityValidFrom.Text = Nothing Then
+            TbBusEntityValidFrom.Text = ConvertDateToSAP(Date.Today)
+        ElseIf Not IsValidDate(TbBusEntityValidFrom.Text) Then
             ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)")
-            Return
-        Else
-            CreateRequest.BusEntity.ObjectValidFrom = TbBusEntityValidFrom.Text
+            Return False
         End If
-        If Not IsValidDate(TbBusEntityValidTo.Text) Then
+        CreateRequest.BusEntity.ObjectValidFrom = TbBusEntityValidFrom.Text
+
+        If TbBusEntityValidTo.Text = Nothing Then
+            TbBusEntityValidTo.Text = "9999-12-31"
+        ElseIf Not IsValidDate(TbBusEntityValidTo.Text) Then
             ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)")
-            Return
-        Else
-            CreateRequest.BusEntity.ObjectValidFrom = TbBusEntityValidTo.Text
+            Return False
         End If
+        CreateRequest.BusEntity.ObjectValidFrom = TbBusEntityValidTo.Text
 
         CreateRequest.ObjectAddress.AddressText = TbObjectDescr.Text
         CreateRequest.ObjectAddress.StreetLng = TbStreet.Text
@@ -221,7 +226,7 @@ Public Class MainWindow
         If Not TbTermOrgAssignmentValidFrom.Text = Nothing Then
             If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
                 ShowWarningMessage("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)")
-                Return
+                Return False
             End If
             Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
                 .TermNo = TbTermOrgAssignmentNumber.Text, ' can be empty (default value)
@@ -237,21 +242,23 @@ Public Class MainWindow
             CreateResponse = Proxy.BusinessEntityREFXCreate(CreateRequest)
         Catch Ex As System.ServiceModel.Security.MessageSecurityException
             ShowSecurityErrorMessage()
-            Return
+            Return False
         Catch Ex As TimeoutException
             ShowTimeoutErrorMessage()
-            Return
+            Return False
         Catch Ex As Exception
             ShowExceptionMessage(Ex)
-            Return
+            Return False
         End Try
 
         If Not CheckForErrors(CreateResponse.Return) Then
             CommitWork(False)
+            Return True
         Else
             RollbackWork()
+            Return False
         End If
-    End Sub
+    End Function
 
     ''' <summary>
     ''' Checks for changes, fills all necessary fields and changes the site in the SAP system
@@ -277,7 +284,9 @@ Public Class MainWindow
         End If
 
         ' general data
-        If Not IsValidDate(TbBusEntityValidFrom.Text) Then
+        If TbBusEntityValidFrom.Text = Nothing Then
+            TbBusEntityValidFrom.Text = ConvertDateToSAP(Date.Today)
+        ElseIf Not IsValidDate(TbBusEntityValidFrom.Text) Then
             ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)")
             Return
         End If
@@ -286,7 +295,9 @@ Public Class MainWindow
             ChangeRequest.BusEntityX.ObjectValidFrom = "X"
         End If
 
-        If Not IsValidDate(TbBusEntityValidTo.Text) Then
+        If TbBusEntityValidTo.Text = Nothing Then
+            TbBusEntityValidTo.Text = "9999-12-31"
+        ElseIf Not IsValidDate(TbBusEntityValidTo.Text) Then
             ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)")
             Return
         End If
@@ -321,7 +332,6 @@ Public Class MainWindow
                 ChangeRequest.ObjectAddressX.Country = "X"
             End If
         End If
-
 
         ' reference factors
         If Not CombTenancyLaw.SelectedValue = Nothing Then
@@ -398,7 +408,7 @@ Public Class MainWindow
             Return
         End Try
 
-        'restrict functionality so the user actually only changes the selected site
+        ' restrict functionality so the user actually only changes the selected site
         BtnCreate.Enabled = False
         BtnChange.Enabled = True
         TbCompanyCode.ReadOnly = True
@@ -454,7 +464,7 @@ Public Class MainWindow
     End Sub
 
     ''' <summary>
-    ''' Queries all sites in the SAP system
+    ''' Queries all sites in the SAP system and display them in a list
     ''' </summary>
     Private Sub GetList()
         Dim ListRequest As New BusinessEntity.BusinessEntityREFXGetList()
@@ -470,7 +480,7 @@ Public Class MainWindow
         Dim ReSeloption = {Seloption1}
         ListRequest.Seloption = ReSeloption
 
-        LbxItems.Items.Clear()
+        DgvItems.Rows.Clear()
         Try
             ListResponse = Proxy.BusinessEntityREFXGetList(ListRequest)
         Catch Ex As System.ServiceModel.Security.MessageSecurityException
@@ -486,7 +496,7 @@ Public Class MainWindow
 
         If Not CheckForErrors(ListResponse.Return) Then
             For Each BusEntity As BusinessEntity.ReBusEntity In ListResponse.BusEntity
-                LbxItems.Items.Add(BusEntity.IdentKey)
+                DgvItems.Rows.Add({BusEntity.CompCode, BusEntity.BusinessEntity, BusEntity.BusinessEntityText})
             Next
         Else
             ShowErrorMessage("Wirtschaftseinheiten des Buchungskreises " & TbCompanyCodeList.Text & " konnten nicht abgefragt werden")
@@ -645,13 +655,9 @@ Public Class MainWindow
         End If
     End Sub
 
-    Private Sub OnSelectedIndexChangedInLbxItems(sender As Object, e As EventArgs) Handles LbxItems.SelectedIndexChanged
-        If LbxItems.SelectedItem() = Nothing Then
-            Return
-        End If
-
-        Dim CompanyCode = LbxItems.SelectedItem().ToString().Substring(0, 4)
-        Dim BusinessEntityNumber = LbxItems.SelectedItem().ToString().Substring(5)
+    Private Sub OnSelectedItemChangedInDgvItems(sender As Object, e As DataGridViewCellEventArgs) Handles DgvItems.RowEnter
+        Dim CompanyCode As Object = DgvItems.Item("BE_CompanyCode", e.RowIndex).Value
+        Dim BusinessEntityNumber As Object = DgvItems.Item("BE_Number", e.RowIndex).Value
 
         GetDetail(CompanyCode, BusinessEntityNumber)
 
