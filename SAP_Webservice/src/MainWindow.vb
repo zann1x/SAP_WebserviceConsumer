@@ -23,6 +23,12 @@ Public Class MainWindow
         Public Proficenter As String
     End Structure
 
+    Structure S_TermOrgAssignment
+        Dim ValidFrom As String
+        Dim BusinessArea As String
+        Dim Profitcenter As String
+    End Structure
+
     Dim BE_Instance As S_BusinessEntity
 
     ''' <summary>
@@ -252,7 +258,7 @@ Public Class MainWindow
         End Try
 
         If Not CheckForErrors(CreateResponse.Return) Then
-            CommitWork(False)
+            CommitWork(True)
             Return True
         Else
             RollbackWork()
@@ -451,6 +457,16 @@ Public Class MainWindow
 
         ' posting parameters
         ' assuming there is only one posting parameter
+        'TODO
+        Dim Assignments As New Dictionary(Of String, S_TermOrgAssignment)
+        For Each TermOA As BusinessEntity.ReTermOa In DetailResponse.TermOrgAssignment
+            Dim Assignment As S_TermOrgAssignment
+            Assignment.ValidFrom = TermOA.ValidFrom
+            Assignment.BusinessArea = TermOA.BusArea
+            Assignment.Profitcenter = TermOA.ProfitCtr
+
+            Assignments.Add(TermOA.TermNo, Assignment)
+        Next
         Dim TermOrgAssignment = DetailResponse.TermOrgAssignment.ElementAt(0)
         TbTermOrgAssignmentNumber.Text = TermOrgAssignment.TermNo
         TbTermOrgAssignmentValidFrom.Text = TermOrgAssignment.ValidFrom
@@ -462,6 +478,8 @@ Public Class MainWindow
         BE_Instance.BusinessArea = TbBusinessArea.Text
         BE_Instance.Proficenter = TbProfitCenter.Text
     End Sub
+
+
 
     ''' <summary>
     ''' Queries all sites in the SAP system and display them in a list

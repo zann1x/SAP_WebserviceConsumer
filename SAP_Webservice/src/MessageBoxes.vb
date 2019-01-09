@@ -35,6 +35,6 @@
                         " * Mietrecht (s. Bezugsgrößen)" + Environment.NewLine +
                         "" + Environment.NewLine +
                         "Eingabehilfe:" + Environment.NewLine +
-                        " * Allg. Datumsformat: YYYY-MM-DD", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        " * Allg. Datumsformat: YYYY-MM-DD", "Hilfe", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 End Module
