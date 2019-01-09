@@ -28,6 +28,7 @@
     End Sub
 
     Public Sub ShowHelpMessage()
+        'TODO
         MessageBox.Show("Pflichtfelder unabhängig des Buchungskreises:" + Environment.NewLine +
                         " * Buchungskreis" + Environment.NewLine +
                         " * Wirtschaftseinheit" + Environment.NewLine +
@@ -35,6 +36,8 @@
                         " * Mietrecht (s. Bezugsgrößen)" + Environment.NewLine +
                         "" + Environment.NewLine +
                         "Eingabehilfe:" + Environment.NewLine +
-                        " * Allg. Datumsformat: YYYY-MM-DD", "Hilfe", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        " * Allg. Datumsformat: YYYY-MM-DD" + Environment.NewLine +
+                        "" + Environment.NewLine +
+                        "Eingabehilfen für weitere Felder entnehmen Sie bitte dem SAP-System.", "Hilfe", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 End Module

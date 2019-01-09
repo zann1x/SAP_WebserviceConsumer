@@ -53,7 +53,10 @@ Partial Class MainWindow
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.TpPostingParameters = New System.Windows.Forms.TabPage()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.BtnNextTerm = New System.Windows.Forms.Button()
+        Me.BtnPreviousTerm = New System.Windows.Forms.Button()
+        Me.TbTaxJurisd = New System.Windows.Forms.TextBox()
+        Me.LblTaxJurisd = New System.Windows.Forms.Label()
         Me.TbTermOrgAssignmentValidFrom = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -79,6 +82,10 @@ Partial Class MainWindow
         Me.BE_CompanyCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BE_Number = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BE_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LblActiveTerm = New System.Windows.Forms.Label()
+        Me.LblTermOrgAssignmentValidTo = New System.Windows.Forms.Label()
+        Me.TbTermOrgAssignmentValidTo = New System.Windows.Forms.TextBox()
+        Me.TbTermOrgAssignmentText = New System.Windows.Forms.TextBox()
         Me.BusinessEntityREFXGetListResponseBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.BusinessEntityREFXGetListResponse1BindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.TabControl1.SuspendLayout()
@@ -315,7 +322,7 @@ Partial Class MainWindow
         'LblBusEntityValidFrom
         '
         Me.LblBusEntityValidFrom.AutoSize = True
-        Me.LblBusEntityValidFrom.Location = New System.Drawing.Point(6, 12)
+        Me.LblBusEntityValidFrom.Location = New System.Drawing.Point(3, 9)
         Me.LblBusEntityValidFrom.Name = "LblBusEntityValidFrom"
         Me.LblBusEntityValidFrom.Size = New System.Drawing.Size(49, 13)
         Me.LblBusEntityValidFrom.TabIndex = 0
@@ -374,7 +381,14 @@ Partial Class MainWindow
         'TpPostingParameters
         '
         Me.TpPostingParameters.BackColor = System.Drawing.Color.White
-        Me.TpPostingParameters.Controls.Add(Me.Label3)
+        Me.TpPostingParameters.Controls.Add(Me.TbTermOrgAssignmentText)
+        Me.TpPostingParameters.Controls.Add(Me.TbTermOrgAssignmentValidTo)
+        Me.TpPostingParameters.Controls.Add(Me.LblTermOrgAssignmentValidTo)
+        Me.TpPostingParameters.Controls.Add(Me.LblActiveTerm)
+        Me.TpPostingParameters.Controls.Add(Me.BtnNextTerm)
+        Me.TpPostingParameters.Controls.Add(Me.BtnPreviousTerm)
+        Me.TpPostingParameters.Controls.Add(Me.TbTaxJurisd)
+        Me.TpPostingParameters.Controls.Add(Me.LblTaxJurisd)
         Me.TpPostingParameters.Controls.Add(Me.TbTermOrgAssignmentValidFrom)
         Me.TpPostingParameters.Controls.Add(Me.Label1)
         Me.TpPostingParameters.Controls.Add(Me.Label2)
@@ -392,14 +406,40 @@ Partial Class MainWindow
         Me.TpPostingParameters.TabIndex = 5
         Me.TpPostingParameters.Text = "Buchungsparameter"
         '
-        'Label3
+        'BtnNextTerm
         '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(220, 8)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(105, 13)
-        Me.Label3.TabIndex = 11
-        Me.Label3.Text = "(Standardwert = leer)"
+        Me.BtnNextTerm.Location = New System.Drawing.Point(399, 29)
+        Me.BtnNextTerm.Name = "BtnNextTerm"
+        Me.BtnNextTerm.Size = New System.Drawing.Size(23, 23)
+        Me.BtnNextTerm.TabIndex = 15
+        Me.BtnNextTerm.Text = ">"
+        Me.BtnNextTerm.UseVisualStyleBackColor = True
+        '
+        'BtnPreviousTerm
+        '
+        Me.BtnPreviousTerm.Location = New System.Drawing.Point(370, 29)
+        Me.BtnPreviousTerm.Name = "BtnPreviousTerm"
+        Me.BtnPreviousTerm.Size = New System.Drawing.Size(23, 23)
+        Me.BtnPreviousTerm.TabIndex = 14
+        Me.BtnPreviousTerm.Text = "<"
+        Me.BtnPreviousTerm.UseVisualStyleBackColor = True
+        '
+        'TbTaxJurisd
+        '
+        Me.TbTaxJurisd.Location = New System.Drawing.Point(114, 120)
+        Me.TbTaxJurisd.MaxLength = 15
+        Me.TbTaxJurisd.Name = "TbTaxJurisd"
+        Me.TbTaxJurisd.Size = New System.Drawing.Size(100, 20)
+        Me.TbTaxJurisd.TabIndex = 13
+        '
+        'LblTaxJurisd
+        '
+        Me.LblTaxJurisd.AutoSize = True
+        Me.LblTaxJurisd.Location = New System.Drawing.Point(6, 123)
+        Me.LblTaxJurisd.Name = "LblTaxJurisd"
+        Me.LblTaxJurisd.Size = New System.Drawing.Size(61, 13)
+        Me.LblTaxJurisd.TabIndex = 12
+        Me.LblTaxJurisd.Text = "Steuerst.ort"
         '
         'TbTermOrgAssignmentValidFrom
         '
@@ -432,15 +472,16 @@ Partial Class MainWindow
         Me.LblTermOrgAssignmentValidFrom.AutoSize = True
         Me.LblTermOrgAssignmentValidFrom.Location = New System.Drawing.Point(6, 33)
         Me.LblTermOrgAssignmentValidFrom.Name = "LblTermOrgAssignmentValidFrom"
-        Me.LblTermOrgAssignmentValidFrom.Size = New System.Drawing.Size(55, 13)
+        Me.LblTermOrgAssignmentValidFrom.Size = New System.Drawing.Size(49, 13)
         Me.LblTermOrgAssignmentValidFrom.TabIndex = 6
-        Me.LblTermOrgAssignmentValidFrom.Text = "Gültig von"
+        Me.LblTermOrgAssignmentValidFrom.Text = "Gültig ab"
         '
         'TbTermOrgAssignmentNumber
         '
         Me.TbTermOrgAssignmentNumber.Location = New System.Drawing.Point(114, 5)
         Me.TbTermOrgAssignmentNumber.MaxLength = 4
         Me.TbTermOrgAssignmentNumber.Name = "TbTermOrgAssignmentNumber"
+        Me.TbTermOrgAssignmentNumber.ReadOnly = True
         Me.TbTermOrgAssignmentNumber.Size = New System.Drawing.Size(38, 20)
         Me.TbTermOrgAssignmentNumber.TabIndex = 5
         '
@@ -629,6 +670,40 @@ Partial Class MainWindow
         Me.BE_Name.Name = "BE_Name"
         Me.BE_Name.ReadOnly = True
         '
+        'LblActiveTerm
+        '
+        Me.LblActiveTerm.AutoSize = True
+        Me.LblActiveTerm.Location = New System.Drawing.Point(428, 34)
+        Me.LblActiveTerm.Name = "LblActiveTerm"
+        Me.LblActiveTerm.Size = New System.Drawing.Size(45, 13)
+        Me.LblActiveTerm.TabIndex = 16
+        Me.LblActiveTerm.Text = "(Aktuell)"
+        '
+        'LblTermOrgAssignmentValidTo
+        '
+        Me.LblTermOrgAssignmentValidTo.AutoSize = True
+        Me.LblTermOrgAssignmentValidTo.Location = New System.Drawing.Point(225, 34)
+        Me.LblTermOrgAssignmentValidTo.Name = "LblTermOrgAssignmentValidTo"
+        Me.LblTermOrgAssignmentValidTo.Size = New System.Drawing.Size(21, 13)
+        Me.LblTermOrgAssignmentValidTo.TabIndex = 17
+        Me.LblTermOrgAssignmentValidTo.Text = "Bis"
+        '
+        'TbTermOrgAssignmentValidTo
+        '
+        Me.TbTermOrgAssignmentValidTo.Location = New System.Drawing.Point(252, 31)
+        Me.TbTermOrgAssignmentValidTo.Name = "TbTermOrgAssignmentValidTo"
+        Me.TbTermOrgAssignmentValidTo.ReadOnly = True
+        Me.TbTermOrgAssignmentValidTo.Size = New System.Drawing.Size(100, 20)
+        Me.TbTermOrgAssignmentValidTo.TabIndex = 18
+        '
+        'TbTermOrgAssignmentText
+        '
+        Me.TbTermOrgAssignmentText.Location = New System.Drawing.Point(158, 5)
+        Me.TbTermOrgAssignmentText.MaxLength = 60
+        Me.TbTermOrgAssignmentText.Name = "TbTermOrgAssignmentText"
+        Me.TbTermOrgAssignmentText.Size = New System.Drawing.Size(264, 20)
+        Me.TbTermOrgAssignmentText.TabIndex = 19
+        '
         'BusinessEntityREFXGetListResponseBindingSource
         '
         Me.BusinessEntityREFXGetListResponseBindingSource.DataSource = GetType(SAP_Webservice.BusinessEntity.BusinessEntityREFXGetListResponse)
@@ -726,7 +801,6 @@ Partial Class MainWindow
     Friend WithEvents TbBusEntityValidTo As TextBox
     Friend WithEvents TbBusEntityValidFrom As TextBox
     Friend WithEvents TbTermOrgAssignmentValidFrom As TextBox
-    Friend WithEvents Label3 As Label
     Friend WithEvents BtnHelp As Button
     Friend WithEvents DgvItems As DataGridView
     Friend WithEvents BusinessEntityREFXGetListResponseBindingSource As BindingSource
@@ -734,4 +808,12 @@ Partial Class MainWindow
     Friend WithEvents BE_CompanyCode As DataGridViewTextBoxColumn
     Friend WithEvents BE_Number As DataGridViewTextBoxColumn
     Friend WithEvents BE_Name As DataGridViewTextBoxColumn
+    Friend WithEvents TbTaxJurisd As TextBox
+    Friend WithEvents LblTaxJurisd As Label
+    Friend WithEvents BtnNextTerm As Button
+    Friend WithEvents BtnPreviousTerm As Button
+    Friend WithEvents LblActiveTerm As Label
+    Friend WithEvents TbTermOrgAssignmentValidTo As TextBox
+    Friend WithEvents LblTermOrgAssignmentValidTo As Label
+    Friend WithEvents TbTermOrgAssignmentText As TextBox
 End Class

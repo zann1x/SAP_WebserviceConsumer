@@ -17,16 +17,18 @@ Public Class MainWindow
 
         Public TenancyLaw As String
 
-        Public TermNo As String
-        Public OA_ValidFrom As String
-        Public BusinessArea As String
-        Public Proficenter As String
+        Public TermOrgAsssignment_SelectedKey As Integer
+        Public TermOrgAssignment As Dictionary(Of Integer, S_TermOrgAssignment)
     End Structure
 
-    Structure S_TermOrgAssignment
+    Private Structure S_TermOrgAssignment
+        Dim TermNo As String
+        Dim TermText As String
         Dim ValidFrom As String
+        Dim ValidTo As String
         Dim BusinessArea As String
         Dim Profitcenter As String
+        Dim TaxJurcode As String
     End Structure
 
     Dim BE_Instance As S_BusinessEntity
@@ -117,10 +119,16 @@ Public Class MainWindow
     Private Sub BtnNew_Click(sender As Object, e As EventArgs) Handles BtnNew.Click
         BE_Instance = New S_BusinessEntity
 
-        BtnCreate.Enabled = False
-        BtnChange.Enabled = False
         TbCompanyCode.ReadOnly = False
         TbSite.ReadOnly = False
+
+        BtnCreate.Enabled = False
+        BtnChange.Enabled = False
+
+        BtnPreviousTerm.Enabled = False
+        BtnNextTerm.Enabled = False
+        LblActiveTerm.Visible = False
+
         IsEditing = False
 
         ' header
@@ -144,9 +152,12 @@ Public Class MainWindow
 
         ' posting paramters
         TbTermOrgAssignmentNumber.Clear()
+        TbTermOrgAssignmentText.Clear()
         TbTermOrgAssignmentValidFrom.Clear()
+        TbTermOrgAssignmentValidTo.Clear()
         TbBusinessArea.Clear()
         TbProfitCenter.Clear()
+        TbTaxJurisd.Clear()
     End Sub
 
     ''' <summary>
@@ -156,7 +167,7 @@ Public Class MainWindow
     ''' <param name="e"></param>
     Private Sub BtnCreate_Click(sender As Object, e As EventArgs) Handles BtnCreate.Click
         If CreateEntity() Then
-            BtnRefreshList.PerformClick()
+            BtnNew.PerformClick()
         End If
     End Sub
 
@@ -217,9 +228,9 @@ Public Class MainWindow
         CreateRequest.ObjectAddress.HouseNo = TbHouseno.Text
         CreateRequest.ObjectAddress.PostlCod1 = TbPostcode.Text
         CreateRequest.ObjectAddress.City = TbCity.Text
-        Dim kvp = DirectCast(CombCountry.SelectedItem, KeyValuePair(Of String, String))
-        If kvp.Value <> Nothing Then
-            CreateRequest.ObjectAddress.Country = kvp.Key
+        Dim KVP = DirectCast(CombCountry.SelectedItem, KeyValuePair(Of String, String))
+        If KVP.Value <> Nothing Then
+            CreateRequest.ObjectAddress.Country = KVP.Key
         End If
 
         ' reference factors
@@ -229,17 +240,39 @@ Public Class MainWindow
         End If
 
         ' posting parameters
-        If Not TbTermOrgAssignmentValidFrom.Text = Nothing Then
-            If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
-                ShowWarningMessage("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)")
-                Return False
-            End If
-            Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
+        If TbTermOrgAssignmentValidFrom.Text = Nothing Then
+            TbTermOrgAssignmentValidFrom.Text = "0000-00-00"
+        End If
+        If TbTermOrgAssignmentValidTo.Text = Nothing Then
+            TbTermOrgAssignmentValidTo.Text = "9999-12-31"
+        End If
+        If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
+            ShowWarningMessage("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig von)")
+            Return False
+        End If
+
+        Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
+            .TermNo = TbTermOrgAssignmentNumber.Text, ' can be empty (default value)
+            .TermText = TbTermOrgAssignmentText.Text,
+            .ValidFrom = TbTermOrgAssignmentValidFrom.Text,
+            .ValidTo = TbTermOrgAssignmentValidTo.Text,
+            .BusArea = TbBusinessArea.Text,
+            .ProfitCtr = TbProfitCenter.Text,
+            .Taxjurcode = TbTaxJurisd.Text
+        }
+        If TbTermOrgAssignmentValidFrom.Text > "0000-00-00" Then
+            Dim TermOaDat1 As New BusinessEntity.ReTermOaDat With {
                 .TermNo = TbTermOrgAssignmentNumber.Text, ' can be empty (default value)
-                .ValidFrom = TbTermOrgAssignmentValidFrom.Text,
+                .TermText = TbTermOrgAssignmentText.Text,
+                .ValidFrom = "0000-00-00",
+                .ValidTo = SubtractOneFromDate(TbTermOrgAssignmentValidFrom.Text),
                 .BusArea = TbBusinessArea.Text,
-                .ProfitCtr = TbProfitCenter.Text
+                .ProfitCtr = TbProfitCenter.Text,
+                .Taxjurcode = TbTaxJurisd.Text
             }
+
+            CreateRequest.TermOrgAssignment = {TermOaDat1, TermOaDat}
+        Else
             CreateRequest.TermOrgAssignment = {TermOaDat}
         End If
 
@@ -258,8 +291,11 @@ Public Class MainWindow
         End Try
 
         If Not CheckForErrors(CreateResponse.Return) Then
-            CommitWork(True)
-            Return True
+            If CommitWork(True) Then
+                Return True
+            Else
+                Return False
+            End If
         Else
             RollbackWork()
             Return False
@@ -269,7 +305,7 @@ Public Class MainWindow
     ''' <summary>
     ''' Checks for changes, fills all necessary fields and changes the site in the SAP system
     ''' </summary>
-    Private Sub ChangeEntity()
+    Private Function ChangeEntity() As Boolean
         Dim ChangeRequest As New BusinessEntity.BusinessEntityREFXChange()
         Dim ChangeResponse As BusinessEntity.BusinessEntityREFXChangeResponse
 
@@ -294,7 +330,7 @@ Public Class MainWindow
             TbBusEntityValidFrom.Text = ConvertDateToSAP(Date.Today)
         ElseIf Not IsValidDate(TbBusEntityValidFrom.Text) Then
             ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidFrom.Text & " (Gültig ab)")
-            Return
+            Return False
         End If
         If Not TbBusEntityValidFrom.Text.Equals(BE_Instance.BE_ValidFrom) Then
             ChangeRequest.BusEntity.ObjectValidFrom = TbBusEntityValidFrom.Text
@@ -305,7 +341,7 @@ Public Class MainWindow
             TbBusEntityValidTo.Text = "9999-12-31"
         ElseIf Not IsValidDate(TbBusEntityValidTo.Text) Then
             ShowWarningMessage("Ungültiges Datum: " & TbBusEntityValidTo.Text & " (Gültig bis)")
-            Return
+            Return False
         End If
         If Not TbBusEntityValidTo.Text.Equals(BE_Instance.BE_ValidTo) Then
             ChangeRequest.BusEntity.ObjectValidFrom = TbBusEntityValidTo.Text
@@ -348,44 +384,51 @@ Public Class MainWindow
         End If
 
         ' posting parameters
-        ' TODO rethink this again
-        If Not TbTermOrgAssignmentNumber.Text.Equals(BE_Instance.TermNo) Or Not TbTermOrgAssignmentValidFrom.Text.Equals(BE_Instance.OA_ValidFrom) Or Not TbBusinessArea.Text.Equals(BE_Instance.BusinessArea) Or Not TbProfitCenter.Text.Equals(BE_Instance.Proficenter) Then
-            If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
-                MessageBox.Show("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Return
-            End If
+        ' TODO
+        'If Not TbTermOrgAssignmentNumber.Text.Equals(BE_Instance.TermNo) Or Not TbTermOrgAssignmentValidFrom.Text.Equals(BE_Instance.OA_ValidFrom) Or Not TbBusinessArea.Text.Equals(BE_Instance.BusinessArea) Or Not TbProfitCenter.Text.Equals(BE_Instance.Proficenter) Then
+        '    If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
+        '        MessageBox.Show("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        '        Return False
+        '    End If
 
-            ' TODO make insert option possible
-            Dim TermOrgAssignment As New BusinessEntity.ReTermOaDatc With {
-                .ChangeIndicator = "U", ' possible indicators are ' ' for ignore, 'I' for insert, 'U' for update, 'D' for delete
-                .TermNo = TbTermOrgAssignmentNumber.Text, ' mandatory for identification
-                .ValidFrom = TbTermOrgAssignmentValidFrom.Text, ' mandatory for identification
-                .BusArea = TbBusinessArea.Text,
-                .ProfitCtr = TbProfitCenter.Text
-            }
-            ChangeRequest.TermOrgAssignment = {TermOrgAssignment}
-        End If
+        '    Dim TermOrgAssignment As New BusinessEntity.ReTermOaDatc With {
+        '        .ChangeIndicator = "U", ' possible indicators are ' ' for ignore, 'I' for insert, 'U' for update, 'D' for delete
+        '        .TermNo = TbTermOrgAssignmentNumber.Text, ' mandatory for identification
+        '        .TermText = TbTermOrgAssignmentText.Text,
+        '        .ValidFrom = TbTermOrgAssignmentValidFrom.Text, ' mandatory for identification
+        '        .ValidTo = TbTermOrgAssignmentValidTo.Text,
+        '        .BusArea = TbBusinessArea.Text,
+        '        .ProfitCtr = TbProfitCenter.Text,
+        '        .Taxjurcode = TbTaxJurisd.Text
+        '    }
+        '    ChangeRequest.TermOrgAssignment = {TermOrgAssignment}
+        'End If
 
         ' change the site
         Try
             ChangeResponse = Proxy.BusinessEntityREFXChange(ChangeRequest)
         Catch Ex As System.ServiceModel.Security.MessageSecurityException
             ShowSecurityErrorMessage()
-            Return
+            Return False
         Catch Ex As TimeoutException
             ShowTimeoutErrorMessage()
-            Return
+            Return False
         Catch Ex As Exception
             ShowExceptionMessage(Ex)
-            Return
+            Return False
         End Try
 
         If Not CheckForErrors(ChangeResponse.Return) Then
-            CommitWork(False)
+            If CommitWork(False) Then
+                Return True
+            Else
+                Return False
+            End If
         Else
             RollbackWork()
+            Return False
         End If
-    End Sub
+    End Function
 
     ''' <summary>
     ''' Queries the details of the site
@@ -393,8 +436,6 @@ Public Class MainWindow
     ''' <param name="CompanyCode">Company code of the site</param>
     ''' <param name="BusinessEntityNumber">The number of the site</param>
     Private Sub GetDetail(CompanyCode As String, BusinessEntityNumber As String)
-        BtnNew.PerformClick()
-
         Dim DetailRequest As New BusinessEntity.BusinessEntityREFXGetDetail()
         Dim DetailResponse As BusinessEntity.BusinessEntityREFXGetDetailResponse
 
@@ -456,30 +497,37 @@ Public Class MainWindow
         BE_Instance.TenancyLaw = CombTenancyLaw.SelectedValue
 
         ' posting parameters
-        ' assuming there is only one posting parameter
         'TODO
-        Dim Assignments As New Dictionary(Of String, S_TermOrgAssignment)
-        For Each TermOA As BusinessEntity.ReTermOa In DetailResponse.TermOrgAssignment
-            Dim Assignment As S_TermOrgAssignment
-            Assignment.ValidFrom = TermOA.ValidFrom
-            Assignment.BusinessArea = TermOA.BusArea
-            Assignment.Profitcenter = TermOA.ProfitCtr
+        BE_Instance.TermOrgAssignment = New Dictionary(Of Integer, S_TermOrgAssignment)
+        Dim Assignments As New Dictionary(Of Integer, S_TermOrgAssignment)
 
-            Assignments.Add(TermOA.TermNo, Assignment)
+        Dim LastElementIndex As Integer = DetailResponse.TermOrgAssignment.Length - 1
+        Dim ActivetermIndex As Integer = LastElementIndex
+        For Index As Integer = 0 To LastElementIndex
+            Dim TermOA As BusinessEntity.ReTermOa = DetailResponse.TermOrgAssignment.ElementAt(Index)
+
+            Dim Assignment As New S_TermOrgAssignment With {
+                .TermNo = TermOA.TermNo,
+                .TermText = TermOA.TermText,
+                .ValidFrom = TermOA.ValidFrom,
+                .ValidTo = TermOA.ValidTo,
+                .BusinessArea = TermOA.BusArea,
+                .Profitcenter = TermOA.ProfitCtr
+            }
+
+            If DateLiesInRange(ConvertDateToSAP(Date.Today), Assignment.ValidFrom, Assignment.ValidTo) Then
+                LblActiveTerm.Visible = True
+                ActivetermIndex = Index
+                BE_Instance.TermOrgAsssignment_SelectedKey = ActivetermIndex
+            End If
+
+            Assignments.Add(Index, Assignment)
+            BE_Instance.TermOrgAssignment.Add(Index, Assignment)
         Next
-        Dim TermOrgAssignment = DetailResponse.TermOrgAssignment.ElementAt(0)
-        TbTermOrgAssignmentNumber.Text = TermOrgAssignment.TermNo
-        TbTermOrgAssignmentValidFrom.Text = TermOrgAssignment.ValidFrom
-        TbBusinessArea.Text = TermOrgAssignment.BusArea
-        TbProfitCenter.Text = TermOrgAssignment.ProfitCtr
 
-        BE_Instance.TermNo = TbTermOrgAssignmentNumber.Text
-        BE_Instance.OA_ValidFrom = TbTermOrgAssignmentValidFrom.Text
-        BE_Instance.BusinessArea = TbBusinessArea.Text
-        BE_Instance.Proficenter = TbProfitCenter.Text
+        Dim ActiveTerm As S_TermOrgAssignment = Assignments.ElementAt(ActivetermIndex).Value
+        SetTermOrgAssignmentFields(ActiveTerm)
     End Sub
-
-
 
     ''' <summary>
     ''' Queries all sites in the SAP system and display them in a list
@@ -586,7 +634,7 @@ Public Class MainWindow
     ''' <summary>
     ''' Submits a commit
     ''' </summary>
-    Private Sub CommitWork(ByVal DoWait As Boolean)
+    Private Function CommitWork(ByVal DoWait As Boolean) As Boolean
         Dim CommitRequest As New BusinessEntity.BapiServiceTransactionCommit()
         Dim CommitResponse As BusinessEntity.BapiServiceTransactionCommitResponse
 
@@ -595,36 +643,68 @@ Public Class MainWindow
         Else
             CommitRequest.WAIT = Nothing
         End If
-        CommitResponse = Proxy.BapiServiceTransactionCommit(CommitRequest)
+
+        Try
+            CommitResponse = Proxy.BapiServiceTransactionCommit(CommitRequest)
+        Catch Ex As System.ServiceModel.Security.MessageSecurityException
+            ShowSecurityErrorMessage()
+            Return False
+        Catch Ex As TimeoutException
+            ShowTimeoutErrorMessage()
+            Return False
+        Catch Ex As Exception
+            ShowExceptionMessage(Ex)
+            Return False
+        End Try
 
         ' return messages are only received when a commit and wait is executed
         If DoWait Then
             If CheckForErrors({CommitResponse.Return}) Then
                 RollbackWork()
+                Return False
+            Else
+                Return True
             End If
+        Else
+            Return True
         End If
-    End Sub
+    End Function
 
     ''' <summary>
     ''' Submits a rollback
     ''' </summary>
-    Private Sub RollbackWork()
+    Private Function RollbackWork() As Boolean
         Dim RollbackRequest As New BusinessEntity.BapiServiceTransactionRollback()
 
         ' no return messages are received in case of an error here
-        Proxy.BapiServiceTransactionRollback(RollbackRequest)
-    End Sub
+        Try
+            Proxy.BapiServiceTransactionRollback(RollbackRequest)
+        Catch Ex As System.ServiceModel.Security.MessageSecurityException
+            ShowSecurityErrorMessage()
+            Return False
+        Catch Ex As TimeoutException
+            ShowTimeoutErrorMessage()
+            Return False
+        Catch Ex As Exception
+            ShowExceptionMessage(Ex)
+            Return False
+        End Try
+
+        Return True
+    End Function
 
     ''' <summary>
     ''' Converts the SAP date into a date valid for VB, respecting the bounds
     ''' </summary>
     ''' <param name="Value">The original date</param>
-    ''' <param name="MinDate">Minimum value (lower bound) of the date</param>
-    ''' <param name="MaxDate">Maximum value (upper bound) of the date</param>
+    ''' <param name="Low">Minimum value (lower bound) of the date</param>
+    ''' <param name="High">Maximum value (upper bound) of the date</param>
     ''' <returns>The converted date</returns>
-    Private Function ConvertDateToInternal(ByVal Value As String, ByVal MinDate As Date, ByVal MaxDate As Date) As Date
+    Private Function ConvertDateToInternal(ByVal Value As String, ByVal Low As String, ByVal High As String) As Date
         Dim DateSAP As String
         Dim ConvertedDate As Date
+        Dim MinDate As Date
+        Dim MaxDate As Date
 
         DateSAP = Value
 
@@ -642,6 +722,8 @@ Public Class MainWindow
         End If
 
         ConvertedDate = New Date(Value.Substring(0, 4), Value.Substring(5, 2), Value.Substring(8, 2))
+        MinDate = New Date(Low.Substring(0, 4), Low.Substring(5, 2), Low.Substring(8, 2))
+        MaxDate = New Date(High.Substring(0, 4), High.Substring(5, 2), High.Substring(8, 2))
 
         ' check bounds
         If ConvertedDate < MinDate Then
@@ -664,7 +746,7 @@ Public Class MainWindow
 
     Private Function IsValidDate(ByVal Value As String) As Boolean
         ' valid dates have the format yyyy-mm-dd
-        Return Regex.IsMatch(Value, "(\d{4})\-(0[1-9]|1[012])\-(0[1-9]|1[0-9]|2[0-9]|3[01])")
+        Return Regex.IsMatch(Value, "(\d{4})\-(0[0-9]|1[012])\-(0[0-9]|1[0-9]|2[0-9]|3[01])")
     End Function
 
     Private Sub OnKeyUpInTbCompanyCodeList(sender As Object, e As KeyEventArgs) Handles TbCompanyCodeList.KeyUp
@@ -676,6 +758,8 @@ Public Class MainWindow
     Private Sub OnSelectedItemChangedInDgvItems(sender As Object, e As DataGridViewCellEventArgs) Handles DgvItems.RowEnter
         Dim CompanyCode As Object = DgvItems.Item("BE_CompanyCode", e.RowIndex).Value
         Dim BusinessEntityNumber As Object = DgvItems.Item("BE_Number", e.RowIndex).Value
+
+        BtnNew.PerformClick()
 
         GetDetail(CompanyCode, BusinessEntityNumber)
 
@@ -706,4 +790,70 @@ Public Class MainWindow
     Private Sub BtnHelp_Click(sender As Object, e As EventArgs) Handles BtnHelp.Click
         ShowHelpMessage()
     End Sub
+
+    Private Sub BtnPreviousTerm_Click(sender As Object, e As EventArgs) Handles BtnPreviousTerm.Click
+        'TODO
+        BE_Instance.TermOrgAsssignment_SelectedKey = BE_Instance.TermOrgAsssignment_SelectedKey - 1
+
+        BtnNextTerm.Enabled = True
+
+        If BE_Instance.TermOrgAsssignment_SelectedKey = 0 Then
+            BtnPreviousTerm.Enabled = False
+        End If
+
+        Dim CurrentTerm As S_TermOrgAssignment = BE_Instance.TermOrgAssignment.ElementAt(BE_Instance.TermOrgAsssignment_SelectedKey).Value
+        SetTermOrgAssignmentFields(CurrentTerm)
+
+        If DateLiesInRange(ConvertDateToSAP(Date.Today), CurrentTerm.ValidFrom, CurrentTerm.ValidTo) Then
+            LblActiveTerm.Visible = True
+        Else
+            LblActiveTerm.Visible = False
+        End If
+    End Sub
+
+    Private Sub BtnNextTerm_Click(sender As Object, e As EventArgs) Handles BtnNextTerm.Click
+        'TODO
+        BE_Instance.TermOrgAsssignment_SelectedKey = BE_Instance.TermOrgAsssignment_SelectedKey + 1
+
+        BtnPreviousTerm.Enabled = True
+
+        If BE_Instance.TermOrgAssignment.Count - 1 = BE_Instance.TermOrgAsssignment_SelectedKey Then
+            BtnNextTerm.Enabled = False
+        End If
+
+        Dim CurrentTerm As S_TermOrgAssignment = BE_Instance.TermOrgAssignment.ElementAt(BE_Instance.TermOrgAsssignment_SelectedKey).Value
+        SetTermOrgAssignmentFields(CurrentTerm)
+
+        If DateLiesInRange(ConvertDateToSAP(Date.Today), CurrentTerm.ValidFrom, CurrentTerm.ValidTo) Then
+            LblActiveTerm.Visible = True
+        Else
+            LblActiveTerm.Visible = False
+        End If
+    End Sub
+
+    Private Sub SetTermOrgAssignmentFields(ByRef CurrentTerm As S_TermOrgAssignment)
+        TbTermOrgAssignmentNumber.Text = CurrentTerm.TermNo
+        TbTermOrgAssignmentText.Text = CurrentTerm.TermText
+        TbTermOrgAssignmentValidFrom.Text = CurrentTerm.ValidFrom
+        TbTermOrgAssignmentValidTo.Text = CurrentTerm.ValidTo
+        TbBusinessArea.Text = CurrentTerm.BusinessArea
+        TbProfitCenter.Text = CurrentTerm.Profitcenter
+        TbTaxJurisd.Text = CurrentTerm.TaxJurcode
+    End Sub
+
+    Private Function DateLiesInRange(DateToCheck As String, Low As String, High As String) As Boolean
+        If Low <= DateToCheck And High >= DateToCheck Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Private Function SubtractOneFromDate(DateToSubtractFrom As String) As String
+        Dim InternalDate As Date = ConvertDateToInternal(DateToSubtractFrom, "0001-01-01", "9999-12-31")
+
+        InternalDate = InternalDate.AddDays(-1)
+
+        Return ConvertDateToSAP(InternalDate)
+    End Function
 End Class
