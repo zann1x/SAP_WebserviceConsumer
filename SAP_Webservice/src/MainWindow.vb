@@ -18,7 +18,8 @@ Public Class MainWindow
         Public TenancyLaw As String
 
         Public TermOrgAsssignment_SelectedKey As Integer
-        Public TermOrgAssignment As Dictionary(Of Integer, S_TermOrgAssignment)
+        'Public TermOrgAssignment As Dictionary(Of Integer, S_TermOrgAssignment)
+        Public TermOrgAssignment As List(Of S_TermOrgAssignment)
     End Structure
 
     Private Structure S_TermOrgAssignment
@@ -125,6 +126,7 @@ Public Class MainWindow
         BtnCreate.Enabled = False
         BtnChange.Enabled = False
 
+        TbTermOrgAssignmentValidFrom.ReadOnly = False
         BtnPreviousTerm.Enabled = False
         BtnNextTerm.Enabled = False
         LblActiveTerm.Visible = False
@@ -243,12 +245,13 @@ Public Class MainWindow
         If TbTermOrgAssignmentValidFrom.Text = Nothing Then
             TbTermOrgAssignmentValidFrom.Text = "0000-00-00"
         End If
-        If TbTermOrgAssignmentValidTo.Text = Nothing Then
-            TbTermOrgAssignmentValidTo.Text = "9999-12-31"
-        End If
         If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
             ShowWarningMessage("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig von)")
             Return False
+        End If
+
+        If TbTermOrgAssignmentValidTo.Text = Nothing Then
+            TbTermOrgAssignmentValidTo.Text = "9999-12-31"
         End If
 
         Dim TermOaDat As New BusinessEntity.ReTermOaDat With {
@@ -384,25 +387,29 @@ Public Class MainWindow
         End If
 
         ' posting parameters
-        ' TODO
-        'If Not TbTermOrgAssignmentNumber.Text.Equals(BE_Instance.TermNo) Or Not TbTermOrgAssignmentValidFrom.Text.Equals(BE_Instance.OA_ValidFrom) Or Not TbBusinessArea.Text.Equals(BE_Instance.BusinessArea) Or Not TbProfitCenter.Text.Equals(BE_Instance.Proficenter) Then
-        '    If Not IsValidDate(TbTermOrgAssignmentValidFrom.Text) Then
-        '        MessageBox.Show("Ungültiges Datum: " & TbTermOrgAssignmentValidFrom.Text & " (Gültig ab)", "Warnung", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        '        Return False
-        '    End If
+        Dim TermOrgAssignments(BE_Instance.TermOrgAssignment.Count - 1) As BusinessEntity.ReTermOaDatc
+        For Index = 0 To BE_Instance.TermOrgAssignment.Count - 1
+            Dim TermOA As S_TermOrgAssignment = BE_Instance.TermOrgAssignment.ElementAt(Index)
 
-        '    Dim TermOrgAssignment As New BusinessEntity.ReTermOaDatc With {
-        '        .ChangeIndicator = "U", ' possible indicators are ' ' for ignore, 'I' for insert, 'U' for update, 'D' for delete
-        '        .TermNo = TbTermOrgAssignmentNumber.Text, ' mandatory for identification
-        '        .TermText = TbTermOrgAssignmentText.Text,
-        '        .ValidFrom = TbTermOrgAssignmentValidFrom.Text, ' mandatory for identification
-        '        .ValidTo = TbTermOrgAssignmentValidTo.Text,
-        '        .BusArea = TbBusinessArea.Text,
-        '        .ProfitCtr = TbProfitCenter.Text,
-        '        .Taxjurcode = TbTaxJurisd.Text
-        '    }
-        '    ChangeRequest.TermOrgAssignment = {TermOrgAssignment}
-        'End If
+            TermOrgAssignments(Index) = New BusinessEntity.ReTermOaDatc()
+
+            ' possible indicators are ' ' for ignore, 'I' for insert, 'U' for update, 'D' for delete
+            If Not TbTermOrgAssignmentText.Text.Equals(TermOA.TermText) Or Not TbBusinessArea.Text.Equals(TermOA.BusinessArea) Or Not TbProfitCenter.Text.Equals(TermOA.Profitcenter) Or Not TbTaxJurisd.Text.Equals(TermOA.TaxJurcode) Then
+                TermOrgAssignments(Index).ChangeIndicator = "U"
+            Else
+                TermOrgAssignments(Index).ChangeIndicator = " "
+            End If
+
+            TermOrgAssignments(Index).TermNo = TermOA.TermNo
+            TermOrgAssignments(Index).TermText = TermOA.TermText
+            TermOrgAssignments(Index).ValidFrom = TermOA.ValidFrom
+            TermOrgAssignments(Index).ValidTo = TermOA.ValidTo
+            TermOrgAssignments(Index).BusArea = TermOA.BusinessArea
+            TermOrgAssignments(Index).ProfitCtr = TermOA.Profitcenter
+            TermOrgAssignments(Index).Taxjurcode = TermOA.TaxJurcode
+        Next
+
+        ChangeRequest.TermOrgAssignment = TermOrgAssignments
 
         ' change the site
         Try
@@ -460,6 +467,7 @@ Public Class MainWindow
         BtnChange.Enabled = True
         TbCompanyCode.ReadOnly = True
         TbSite.ReadOnly = True
+        TbTermOrgAssignmentValidFrom.ReadOnly = True
         IsEditing = True
 
         ' header
@@ -497,12 +505,11 @@ Public Class MainWindow
         BE_Instance.TenancyLaw = CombTenancyLaw.SelectedValue
 
         ' posting parameters
-        'TODO
-        BE_Instance.TermOrgAssignment = New Dictionary(Of Integer, S_TermOrgAssignment)
+        BE_Instance.TermOrgAssignment = New List(Of S_TermOrgAssignment)
         Dim Assignments As New Dictionary(Of Integer, S_TermOrgAssignment)
 
         Dim LastElementIndex As Integer = DetailResponse.TermOrgAssignment.Length - 1
-        Dim ActivetermIndex As Integer = LastElementIndex
+        Dim ActiveTermIndex As Integer = LastElementIndex
         For Index As Integer = 0 To LastElementIndex
             Dim TermOA As BusinessEntity.ReTermOa = DetailResponse.TermOrgAssignment.ElementAt(Index)
 
@@ -512,20 +519,34 @@ Public Class MainWindow
                 .ValidFrom = TermOA.ValidFrom,
                 .ValidTo = TermOA.ValidTo,
                 .BusinessArea = TermOA.BusArea,
-                .Profitcenter = TermOA.ProfitCtr
+                .Profitcenter = TermOA.ProfitCtr,
+                .TaxJurcode = TermOA.Taxjurcode
             }
 
+            ' find active term org assignment
             If DateLiesInRange(ConvertDateToSAP(Date.Today), Assignment.ValidFrom, Assignment.ValidTo) Then
                 LblActiveTerm.Visible = True
-                ActivetermIndex = Index
-                BE_Instance.TermOrgAsssignment_SelectedKey = ActivetermIndex
+                ActiveTermIndex = Index
+                BE_Instance.TermOrgAsssignment_SelectedKey = ActiveTermIndex
             End If
 
             Assignments.Add(Index, Assignment)
-            BE_Instance.TermOrgAssignment.Add(Index, Assignment)
+            BE_Instance.TermOrgAssignment.Add(Assignment)
         Next
 
-        Dim ActiveTerm As S_TermOrgAssignment = Assignments.ElementAt(ActivetermIndex).Value
+        ' set buttons to switch between term org assignments
+        If LastElementIndex > 0 Then
+            If ActiveTermIndex = 0 Then
+                BtnNextTerm.Enabled = True
+            ElseIf ActiveTermIndex = LastElementIndex Then
+                BtnPreviousTerm.Enabled = True
+            Else
+                BtnPreviousTerm.Enabled = True
+                BtnNextTerm.Enabled = True
+            End If
+        End If
+
+        Dim ActiveTerm As S_TermOrgAssignment = Assignments.ElementAt(ActiveTermIndex).Value
         SetTermOrgAssignmentFields(ActiveTerm)
     End Sub
 
@@ -735,6 +756,11 @@ Public Class MainWindow
         Return ConvertedDate
     End Function
 
+    ''' <summary>
+    ''' Converts dates of format DD.MM.YYYY into format YYYY-MM-DD
+    ''' </summary>
+    ''' <param name="Value">The date to convert</param>
+    ''' <returns>Returns the converted date</returns>
     Private Function ConvertDateToSAP(ByVal Value As String) As String
         Dim ConvertedDate As String
 
@@ -744,6 +770,11 @@ Public Class MainWindow
         Return ConvertedDate
     End Function
 
+    ''' <summary>
+    ''' Checks whether the passed date has a valid format or not
+    ''' </summary>
+    ''' <param name="Value">The date to check</param>
+    ''' <returns>Returns true if the date is valid, false otherwise</returns>
     Private Function IsValidDate(ByVal Value As String) As Boolean
         ' valid dates have the format yyyy-mm-dd
         Return Regex.IsMatch(Value, "(\d{4})\-(0[0-9]|1[012])\-(0[0-9]|1[0-9]|2[0-9]|3[01])")
@@ -782,17 +813,11 @@ Public Class MainWindow
         MandatoryFieldsFilled()
     End Sub
 
-    ''' <summary>
-    ''' Shows information about the mandatory fields to be filled
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
     Private Sub BtnHelp_Click(sender As Object, e As EventArgs) Handles BtnHelp.Click
         ShowHelpMessage()
     End Sub
 
     Private Sub BtnPreviousTerm_Click(sender As Object, e As EventArgs) Handles BtnPreviousTerm.Click
-        'TODO
         BE_Instance.TermOrgAsssignment_SelectedKey = BE_Instance.TermOrgAsssignment_SelectedKey - 1
 
         BtnNextTerm.Enabled = True
@@ -801,7 +826,7 @@ Public Class MainWindow
             BtnPreviousTerm.Enabled = False
         End If
 
-        Dim CurrentTerm As S_TermOrgAssignment = BE_Instance.TermOrgAssignment.ElementAt(BE_Instance.TermOrgAsssignment_SelectedKey).Value
+        Dim CurrentTerm As S_TermOrgAssignment = BE_Instance.TermOrgAssignment.ElementAt(BE_Instance.TermOrgAsssignment_SelectedKey)
         SetTermOrgAssignmentFields(CurrentTerm)
 
         If DateLiesInRange(ConvertDateToSAP(Date.Today), CurrentTerm.ValidFrom, CurrentTerm.ValidTo) Then
@@ -812,7 +837,6 @@ Public Class MainWindow
     End Sub
 
     Private Sub BtnNextTerm_Click(sender As Object, e As EventArgs) Handles BtnNextTerm.Click
-        'TODO
         BE_Instance.TermOrgAsssignment_SelectedKey = BE_Instance.TermOrgAsssignment_SelectedKey + 1
 
         BtnPreviousTerm.Enabled = True
@@ -821,7 +845,7 @@ Public Class MainWindow
             BtnNextTerm.Enabled = False
         End If
 
-        Dim CurrentTerm As S_TermOrgAssignment = BE_Instance.TermOrgAssignment.ElementAt(BE_Instance.TermOrgAsssignment_SelectedKey).Value
+        Dim CurrentTerm As S_TermOrgAssignment = BE_Instance.TermOrgAssignment.ElementAt(BE_Instance.TermOrgAsssignment_SelectedKey)
         SetTermOrgAssignmentFields(CurrentTerm)
 
         If DateLiesInRange(ConvertDateToSAP(Date.Today), CurrentTerm.ValidFrom, CurrentTerm.ValidTo) Then
@@ -831,6 +855,10 @@ Public Class MainWindow
         End If
     End Sub
 
+    ''' <summary>
+    ''' Sets all term org assignments fields
+    ''' </summary>
+    ''' <param name="CurrentTerm">The values to set</param>
     Private Sub SetTermOrgAssignmentFields(ByRef CurrentTerm As S_TermOrgAssignment)
         TbTermOrgAssignmentNumber.Text = CurrentTerm.TermNo
         TbTermOrgAssignmentText.Text = CurrentTerm.TermText
@@ -841,6 +869,13 @@ Public Class MainWindow
         TbTaxJurisd.Text = CurrentTerm.TaxJurcode
     End Sub
 
+    ''' <summary>
+    ''' Checks whether the passed date lies within the range passed
+    ''' </summary>
+    ''' <param name="DateToCheck">The date to check</param>
+    ''' <param name="Low">Lower bound of the range</param>
+    ''' <param name="High">Upper bound of the range</param>
+    ''' <returns>Returns true if the date is in the range, false otherwise</returns>
     Private Function DateLiesInRange(DateToCheck As String, Low As String, High As String) As Boolean
         If Low <= DateToCheck And High >= DateToCheck Then
             Return True
@@ -849,6 +884,11 @@ Public Class MainWindow
         End If
     End Function
 
+    ''' <summary>
+    ''' Subtract one day from the date passed
+    ''' </summary>
+    ''' <param name="DateToSubtractFrom">The date to subtract one day from</param>
+    ''' <returns>Returns the result of the calculation</returns>
     Private Function SubtractOneFromDate(DateToSubtractFrom As String) As String
         Dim InternalDate As Date = ConvertDateToInternal(DateToSubtractFrom, "0001-01-01", "9999-12-31")
 
