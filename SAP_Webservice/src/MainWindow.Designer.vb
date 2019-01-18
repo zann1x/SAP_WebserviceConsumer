@@ -50,9 +50,11 @@ Partial Class MainWindow
         Me.TpReferenceFactors = New System.Windows.Forms.TabPage()
         Me.CombTenancyLaw = New System.Windows.Forms.ComboBox()
         Me.LblTenancyLaw = New System.Windows.Forms.Label()
-        Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.TpPostingParameters = New System.Windows.Forms.TabPage()
+        Me.TbTermOrgAssignmentText = New System.Windows.Forms.TextBox()
+        Me.TbTermOrgAssignmentValidTo = New System.Windows.Forms.TextBox()
+        Me.LblTermOrgAssignmentValidTo = New System.Windows.Forms.Label()
+        Me.LblActiveTerm = New System.Windows.Forms.Label()
         Me.BtnNextTerm = New System.Windows.Forms.Button()
         Me.BtnPreviousTerm = New System.Windows.Forms.Button()
         Me.TbTaxJurisd = New System.Windows.Forms.TextBox()
@@ -67,11 +69,6 @@ Partial Class MainWindow
         Me.LblBusinessArea = New System.Windows.Forms.Label()
         Me.LblProfitcenter = New System.Windows.Forms.Label()
         Me.TbProfitCenter = New System.Windows.Forms.TextBox()
-        Me.TabPage7 = New System.Windows.Forms.TabPage()
-        Me.TabPage8 = New System.Windows.Forms.TabPage()
-        Me.TabPage9 = New System.Windows.Forms.TabPage()
-        Me.TabPage10 = New System.Windows.Forms.TabPage()
-        Me.TabPage11 = New System.Windows.Forms.TabPage()
         Me.LblExistingSites = New System.Windows.Forms.Label()
         Me.BtnCreate = New System.Windows.Forms.Button()
         Me.BtnRefreshList = New System.Windows.Forms.Button()
@@ -82,10 +79,6 @@ Partial Class MainWindow
         Me.BE_CompanyCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BE_Number = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BE_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LblActiveTerm = New System.Windows.Forms.Label()
-        Me.LblTermOrgAssignmentValidTo = New System.Windows.Forms.Label()
-        Me.TbTermOrgAssignmentValidTo = New System.Windows.Forms.TextBox()
-        Me.TbTermOrgAssignmentText = New System.Windows.Forms.TextBox()
         Me.BusinessEntityREFXGetListResponseBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.BusinessEntityREFXGetListResponse1BindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.TabControl1.SuspendLayout()
@@ -171,14 +164,7 @@ Partial Class MainWindow
         '
         Me.TabControl1.Controls.Add(Me.TpGeneralData)
         Me.TabControl1.Controls.Add(Me.TpReferenceFactors)
-        Me.TabControl1.Controls.Add(Me.TabPage3)
-        Me.TabControl1.Controls.Add(Me.TabPage4)
         Me.TabControl1.Controls.Add(Me.TpPostingParameters)
-        Me.TabControl1.Controls.Add(Me.TabPage7)
-        Me.TabControl1.Controls.Add(Me.TabPage8)
-        Me.TabControl1.Controls.Add(Me.TabPage9)
-        Me.TabControl1.Controls.Add(Me.TabPage10)
-        Me.TabControl1.Controls.Add(Me.TabPage11)
         Me.TabControl1.Location = New System.Drawing.Point(12, 122)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -358,26 +344,6 @@ Partial Class MainWindow
         Me.LblTenancyLaw.TabIndex = 0
         Me.LblTenancyLaw.Text = "Mietrecht*"
         '
-        'TabPage3
-        '
-        Me.TabPage3.BackColor = System.Drawing.Color.LightGray
-        Me.TabPage3.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(768, 179)
-        Me.TabPage3.TabIndex = 2
-        Me.TabPage3.Text = "Infrastruktur"
-        '
-        'TabPage4
-        '
-        Me.TabPage4.BackColor = System.Drawing.Color.LightGray
-        Me.TabPage4.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(768, 179)
-        Me.TabPage4.TabIndex = 3
-        Me.TabPage4.Text = "Bemessungen"
-        '
         'TpPostingParameters
         '
         Me.TpPostingParameters.BackColor = System.Drawing.Color.White
@@ -405,6 +371,40 @@ Partial Class MainWindow
         Me.TpPostingParameters.Size = New System.Drawing.Size(768, 179)
         Me.TpPostingParameters.TabIndex = 5
         Me.TpPostingParameters.Text = "Buchungsparameter"
+        '
+        'TbTermOrgAssignmentText
+        '
+        Me.TbTermOrgAssignmentText.Location = New System.Drawing.Point(158, 5)
+        Me.TbTermOrgAssignmentText.MaxLength = 60
+        Me.TbTermOrgAssignmentText.Name = "TbTermOrgAssignmentText"
+        Me.TbTermOrgAssignmentText.Size = New System.Drawing.Size(264, 20)
+        Me.TbTermOrgAssignmentText.TabIndex = 19
+        '
+        'TbTermOrgAssignmentValidTo
+        '
+        Me.TbTermOrgAssignmentValidTo.Location = New System.Drawing.Point(252, 31)
+        Me.TbTermOrgAssignmentValidTo.Name = "TbTermOrgAssignmentValidTo"
+        Me.TbTermOrgAssignmentValidTo.ReadOnly = True
+        Me.TbTermOrgAssignmentValidTo.Size = New System.Drawing.Size(100, 20)
+        Me.TbTermOrgAssignmentValidTo.TabIndex = 18
+        '
+        'LblTermOrgAssignmentValidTo
+        '
+        Me.LblTermOrgAssignmentValidTo.AutoSize = True
+        Me.LblTermOrgAssignmentValidTo.Location = New System.Drawing.Point(225, 34)
+        Me.LblTermOrgAssignmentValidTo.Name = "LblTermOrgAssignmentValidTo"
+        Me.LblTermOrgAssignmentValidTo.Size = New System.Drawing.Size(21, 13)
+        Me.LblTermOrgAssignmentValidTo.TabIndex = 17
+        Me.LblTermOrgAssignmentValidTo.Text = "Bis"
+        '
+        'LblActiveTerm
+        '
+        Me.LblActiveTerm.AutoSize = True
+        Me.LblActiveTerm.Location = New System.Drawing.Point(428, 34)
+        Me.LblActiveTerm.Name = "LblActiveTerm"
+        Me.LblActiveTerm.Size = New System.Drawing.Size(45, 13)
+        Me.LblActiveTerm.TabIndex = 16
+        Me.LblActiveTerm.Text = "(Aktuell)"
         '
         'BtnNextTerm
         '
@@ -528,56 +528,6 @@ Partial Class MainWindow
         Me.TbProfitCenter.Size = New System.Drawing.Size(100, 20)
         Me.TbProfitCenter.TabIndex = 0
         '
-        'TabPage7
-        '
-        Me.TabPage7.BackColor = System.Drawing.Color.LightGray
-        Me.TabPage7.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage7.Name = "TabPage7"
-        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7.Size = New System.Drawing.Size(768, 179)
-        Me.TabPage7.TabIndex = 6
-        Me.TabPage7.Text = "Partner"
-        '
-        'TabPage8
-        '
-        Me.TabPage8.BackColor = System.Drawing.Color.LightGray
-        Me.TabPage8.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage8.Name = "TabPage8"
-        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage8.Size = New System.Drawing.Size(768, 179)
-        Me.TabPage8.TabIndex = 7
-        Me.TabPage8.Text = "Zuordnungen"
-        '
-        'TabPage9
-        '
-        Me.TabPage9.BackColor = System.Drawing.Color.LightGray
-        Me.TabPage9.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage9.Name = "TabPage9"
-        Me.TabPage9.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage9.Size = New System.Drawing.Size(768, 179)
-        Me.TabPage9.TabIndex = 8
-        Me.TabPage9.Text = "Architektur"
-        '
-        'TabPage10
-        '
-        Me.TabPage10.BackColor = System.Drawing.Color.LightGray
-        Me.TabPage10.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage10.Name = "TabPage10"
-        Me.TabPage10.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage10.Size = New System.Drawing.Size(768, 179)
-        Me.TabPage10.TabIndex = 9
-        Me.TabPage10.Text = "Wiedervorlage"
-        '
-        'TabPage11
-        '
-        Me.TabPage11.BackColor = System.Drawing.Color.LightGray
-        Me.TabPage11.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage11.Name = "TabPage11"
-        Me.TabPage11.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11.Size = New System.Drawing.Size(768, 179)
-        Me.TabPage11.TabIndex = 10
-        Me.TabPage11.Text = "Übersichten"
-        '
         'LblExistingSites
         '
         Me.LblExistingSites.AutoSize = True
@@ -670,40 +620,6 @@ Partial Class MainWindow
         Me.BE_Name.Name = "BE_Name"
         Me.BE_Name.ReadOnly = True
         '
-        'LblActiveTerm
-        '
-        Me.LblActiveTerm.AutoSize = True
-        Me.LblActiveTerm.Location = New System.Drawing.Point(428, 34)
-        Me.LblActiveTerm.Name = "LblActiveTerm"
-        Me.LblActiveTerm.Size = New System.Drawing.Size(45, 13)
-        Me.LblActiveTerm.TabIndex = 16
-        Me.LblActiveTerm.Text = "(Aktuell)"
-        '
-        'LblTermOrgAssignmentValidTo
-        '
-        Me.LblTermOrgAssignmentValidTo.AutoSize = True
-        Me.LblTermOrgAssignmentValidTo.Location = New System.Drawing.Point(225, 34)
-        Me.LblTermOrgAssignmentValidTo.Name = "LblTermOrgAssignmentValidTo"
-        Me.LblTermOrgAssignmentValidTo.Size = New System.Drawing.Size(21, 13)
-        Me.LblTermOrgAssignmentValidTo.TabIndex = 17
-        Me.LblTermOrgAssignmentValidTo.Text = "Bis"
-        '
-        'TbTermOrgAssignmentValidTo
-        '
-        Me.TbTermOrgAssignmentValidTo.Location = New System.Drawing.Point(252, 31)
-        Me.TbTermOrgAssignmentValidTo.Name = "TbTermOrgAssignmentValidTo"
-        Me.TbTermOrgAssignmentValidTo.ReadOnly = True
-        Me.TbTermOrgAssignmentValidTo.Size = New System.Drawing.Size(100, 20)
-        Me.TbTermOrgAssignmentValidTo.TabIndex = 18
-        '
-        'TbTermOrgAssignmentText
-        '
-        Me.TbTermOrgAssignmentText.Location = New System.Drawing.Point(158, 5)
-        Me.TbTermOrgAssignmentText.MaxLength = 60
-        Me.TbTermOrgAssignmentText.Name = "TbTermOrgAssignmentText"
-        Me.TbTermOrgAssignmentText.Size = New System.Drawing.Size(264, 20)
-        Me.TbTermOrgAssignmentText.TabIndex = 19
-        '
         'BusinessEntityREFXGetListResponseBindingSource
         '
         Me.BusinessEntityREFXGetListResponseBindingSource.DataSource = GetType(SAP_Webservice.BusinessEntity.BusinessEntityREFXGetListResponse)
@@ -762,14 +678,7 @@ Partial Class MainWindow
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TpGeneralData As TabPage
     Friend WithEvents TpReferenceFactors As TabPage
-    Friend WithEvents TabPage3 As TabPage
-    Friend WithEvents TabPage4 As TabPage
     Friend WithEvents TpPostingParameters As TabPage
-    Friend WithEvents TabPage7 As TabPage
-    Friend WithEvents TabPage8 As TabPage
-    Friend WithEvents TabPage9 As TabPage
-    Friend WithEvents TabPage10 As TabPage
-    Friend WithEvents TabPage11 As TabPage
     Friend WithEvents LblExistingSites As Label
     Friend WithEvents BtnCreate As Button
     Friend WithEvents BtnRefreshList As Button
