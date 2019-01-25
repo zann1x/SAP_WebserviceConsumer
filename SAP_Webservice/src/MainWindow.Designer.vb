@@ -104,7 +104,7 @@ Partial Class MainWindow
         Me.BtnNew.Location = New System.Drawing.Point(12, 93)
         Me.BtnNew.Name = "BtnNew"
         Me.BtnNew.Size = New System.Drawing.Size(75, 23)
-        Me.BtnNew.TabIndex = 4
+        Me.BtnNew.TabIndex = 21
         Me.BtnNew.Text = "Neu"
         Me.BtnNew.UseVisualStyleBackColor = True
         '
@@ -114,7 +114,7 @@ Partial Class MainWindow
         Me.BtnChange.Location = New System.Drawing.Point(180, 93)
         Me.BtnChange.Name = "BtnChange"
         Me.BtnChange.Size = New System.Drawing.Size(75, 23)
-        Me.BtnChange.TabIndex = 5
+        Me.BtnChange.TabIndex = 23
         Me.BtnChange.Text = "Ändern"
         Me.BtnChange.UseVisualStyleBackColor = True
         '
@@ -124,7 +124,7 @@ Partial Class MainWindow
         Me.TbCompanyCode.MaxLength = 4
         Me.TbCompanyCode.Name = "TbCompanyCode"
         Me.TbCompanyCode.Size = New System.Drawing.Size(40, 20)
-        Me.TbCompanyCode.TabIndex = 6
+        Me.TbCompanyCode.TabIndex = 1
         '
         'LblSite
         '
@@ -141,7 +141,7 @@ Partial Class MainWindow
         Me.TbSite.MaxLength = 8
         Me.TbSite.Name = "TbSite"
         Me.TbSite.Size = New System.Drawing.Size(100, 20)
-        Me.TbSite.TabIndex = 8
+        Me.TbSite.TabIndex = 2
         '
         'LblNameOfSite
         '
@@ -158,7 +158,7 @@ Partial Class MainWindow
         Me.TbNameOfSite.MaxLength = 60
         Me.TbNameOfSite.Name = "TbNameOfSite"
         Me.TbNameOfSite.Size = New System.Drawing.Size(345, 20)
-        Me.TbNameOfSite.TabIndex = 11
+        Me.TbNameOfSite.TabIndex = 3
         '
         'TabControl1
         '
@@ -201,7 +201,7 @@ Partial Class MainWindow
         Me.TbBusEntityValidTo.MaxLength = 10
         Me.TbBusEntityValidTo.Name = "TbBusEntityValidTo"
         Me.TbBusEntityValidTo.Size = New System.Drawing.Size(100, 20)
-        Me.TbBusEntityValidTo.TabIndex = 18
+        Me.TbBusEntityValidTo.TabIndex = 5
         '
         'TbBusEntityValidFrom
         '
@@ -209,7 +209,7 @@ Partial Class MainWindow
         Me.TbBusEntityValidFrom.MaxLength = 10
         Me.TbBusEntityValidFrom.Name = "TbBusEntityValidFrom"
         Me.TbBusEntityValidFrom.Size = New System.Drawing.Size(100, 20)
-        Me.TbBusEntityValidFrom.TabIndex = 17
+        Me.TbBusEntityValidFrom.TabIndex = 4
         '
         'CombCountry
         '
@@ -218,7 +218,7 @@ Partial Class MainWindow
         Me.CombCountry.Name = "CombCountry"
         Me.CombCountry.Size = New System.Drawing.Size(133, 21)
         Me.CombCountry.Sorted = True
-        Me.CombCountry.TabIndex = 14
+        Me.CombCountry.TabIndex = 11
         '
         'LblObjectDescr
         '
@@ -235,7 +235,7 @@ Partial Class MainWindow
         Me.TbObjectDescr.MaxLength = 35
         Me.TbObjectDescr.Name = "TbObjectDescr"
         Me.TbObjectDescr.Size = New System.Drawing.Size(234, 20)
-        Me.TbObjectDescr.TabIndex = 12
+        Me.TbObjectDescr.TabIndex = 6
         '
         'TbCity
         '
@@ -243,7 +243,7 @@ Partial Class MainWindow
         Me.TbCity.MaxLength = 40
         Me.TbCity.Name = "TbCity"
         Me.TbCity.Size = New System.Drawing.Size(290, 20)
-        Me.TbCity.TabIndex = 11
+        Me.TbCity.TabIndex = 10
         '
         'TbHouseno
         '
@@ -251,7 +251,7 @@ Partial Class MainWindow
         Me.TbHouseno.MaxLength = 10
         Me.TbHouseno.Name = "TbHouseno"
         Me.TbHouseno.Size = New System.Drawing.Size(70, 20)
-        Me.TbHouseno.TabIndex = 10
+        Me.TbHouseno.TabIndex = 8
         '
         'TbPostcode
         '
@@ -259,7 +259,7 @@ Partial Class MainWindow
         Me.TbPostcode.MaxLength = 10
         Me.TbPostcode.Name = "TbPostcode"
         Me.TbPostcode.Size = New System.Drawing.Size(70, 20)
-        Me.TbPostcode.TabIndex = 8
+        Me.TbPostcode.TabIndex = 9
         '
         'LblCountry
         '
@@ -285,7 +285,7 @@ Partial Class MainWindow
         Me.TbStreet.MaxLength = 60
         Me.TbStreet.Name = "TbStreet"
         Me.TbStreet.Size = New System.Drawing.Size(290, 20)
-        Me.TbStreet.TabIndex = 5
+        Me.TbStreet.TabIndex = 7
         '
         'LblStreetHouseno
         '
@@ -333,7 +333,7 @@ Partial Class MainWindow
         Me.CombTenancyLaw.Name = "CombTenancyLaw"
         Me.CombTenancyLaw.Size = New System.Drawing.Size(152, 21)
         Me.CombTenancyLaw.Sorted = True
-        Me.CombTenancyLaw.TabIndex = 2
+        Me.CombTenancyLaw.TabIndex = 12
         '
         'LblTenancyLaw
         '
@@ -378,7 +378,7 @@ Partial Class MainWindow
         Me.TbTermOrgAssignmentText.MaxLength = 60
         Me.TbTermOrgAssignmentText.Name = "TbTermOrgAssignmentText"
         Me.TbTermOrgAssignmentText.Size = New System.Drawing.Size(264, 20)
-        Me.TbTermOrgAssignmentText.TabIndex = 19
+        Me.TbTermOrgAssignmentText.TabIndex = 14
         '
         'TbTermOrgAssignmentValidTo
         '
@@ -386,7 +386,7 @@ Partial Class MainWindow
         Me.TbTermOrgAssignmentValidTo.Name = "TbTermOrgAssignmentValidTo"
         Me.TbTermOrgAssignmentValidTo.ReadOnly = True
         Me.TbTermOrgAssignmentValidTo.Size = New System.Drawing.Size(100, 20)
-        Me.TbTermOrgAssignmentValidTo.TabIndex = 18
+        Me.TbTermOrgAssignmentValidTo.TabIndex = 16
         '
         'LblTermOrgAssignmentValidTo
         '
@@ -430,7 +430,7 @@ Partial Class MainWindow
         Me.TbTaxJurisd.MaxLength = 15
         Me.TbTaxJurisd.Name = "TbTaxJurisd"
         Me.TbTaxJurisd.Size = New System.Drawing.Size(100, 20)
-        Me.TbTaxJurisd.TabIndex = 13
+        Me.TbTaxJurisd.TabIndex = 19
         '
         'LblTaxJurisd
         '
@@ -447,7 +447,7 @@ Partial Class MainWindow
         Me.TbTermOrgAssignmentValidFrom.MaxLength = 10
         Me.TbTermOrgAssignmentValidFrom.Name = "TbTermOrgAssignmentValidFrom"
         Me.TbTermOrgAssignmentValidFrom.Size = New System.Drawing.Size(100, 20)
-        Me.TbTermOrgAssignmentValidFrom.TabIndex = 10
+        Me.TbTermOrgAssignmentValidFrom.TabIndex = 15
         '
         'Label1
         '
@@ -483,7 +483,7 @@ Partial Class MainWindow
         Me.TbTermOrgAssignmentNumber.Name = "TbTermOrgAssignmentNumber"
         Me.TbTermOrgAssignmentNumber.ReadOnly = True
         Me.TbTermOrgAssignmentNumber.Size = New System.Drawing.Size(38, 20)
-        Me.TbTermOrgAssignmentNumber.TabIndex = 5
+        Me.TbTermOrgAssignmentNumber.TabIndex = 13
         '
         'LblTermOrgAssignmentNumber
         '
@@ -500,7 +500,7 @@ Partial Class MainWindow
         Me.TbBusinessArea.MaxLength = 4
         Me.TbBusinessArea.Name = "TbBusinessArea"
         Me.TbBusinessArea.Size = New System.Drawing.Size(38, 20)
-        Me.TbBusinessArea.TabIndex = 3
+        Me.TbBusinessArea.TabIndex = 17
         '
         'LblBusinessArea
         '
@@ -526,7 +526,7 @@ Partial Class MainWindow
         Me.TbProfitCenter.MaxLength = 10
         Me.TbProfitCenter.Name = "TbProfitCenter"
         Me.TbProfitCenter.Size = New System.Drawing.Size(100, 20)
-        Me.TbProfitCenter.TabIndex = 0
+        Me.TbProfitCenter.TabIndex = 18
         '
         'LblExistingSites
         '
@@ -543,7 +543,7 @@ Partial Class MainWindow
         Me.BtnCreate.Location = New System.Drawing.Point(93, 93)
         Me.BtnCreate.Name = "BtnCreate"
         Me.BtnCreate.Size = New System.Drawing.Size(75, 23)
-        Me.BtnCreate.TabIndex = 14
+        Me.BtnCreate.TabIndex = 22
         Me.BtnCreate.Text = "Erstellen"
         Me.BtnCreate.UseVisualStyleBackColor = True
         '
@@ -553,7 +553,7 @@ Partial Class MainWindow
         Me.BtnRefreshList.Location = New System.Drawing.Point(764, 334)
         Me.BtnRefreshList.Name = "BtnRefreshList"
         Me.BtnRefreshList.Size = New System.Drawing.Size(24, 23)
-        Me.BtnRefreshList.TabIndex = 15
+        Me.BtnRefreshList.TabIndex = 25
         Me.BtnRefreshList.Text = "P"
         Me.BtnRefreshList.UseVisualStyleBackColor = True
         '
@@ -563,7 +563,7 @@ Partial Class MainWindow
         Me.TbCompanyCodeList.MaxLength = 4
         Me.TbCompanyCodeList.Name = "TbCompanyCodeList"
         Me.TbCompanyCodeList.Size = New System.Drawing.Size(40, 20)
-        Me.TbCompanyCodeList.TabIndex = 17
+        Me.TbCompanyCodeList.TabIndex = 24
         '
         'Splitter1
         '

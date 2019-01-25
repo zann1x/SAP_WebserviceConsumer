@@ -18,7 +18,6 @@ Public Class MainWindow
         Public TenancyLaw As String
 
         Public TermOrgAsssignment_SelectedKey As Integer
-        'Public TermOrgAssignment As Dictionary(Of Integer, S_TermOrgAssignment)
         Public TermOrgAssignment As List(Of S_TermOrgAssignment)
     End Structure
 
