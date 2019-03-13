@@ -6,3 +6,5 @@ The webservice itself grants access to the business object "Business Entity REFX
 The methods to create, change and delete a business entity as well as listing all existing ones are implemented in a basic manner (which means not all of the possible attributes are shown or ever filled).
 
 In order for the application to work, you have to be connected to the university's network via proxy and the SAP user used during this project needs to still be active.
+
+![image](https://user-images.githubusercontent.com/19776837/54315369-2954f280-45de-11e9-9a72-42330dd440da.png)
