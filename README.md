@@ -7,4 +7,4 @@ The methods to create, change and delete a business entity as well as listing al
 
 In order for the application to work, you have to be connected to the university's network via proxy and the SAP user used during this project needs to still be active.
 
-![image](https://user-images.githubusercontent.com/19776837/54315369-2954f280-45de-11e9-9a72-42330dd440da.png)
+![image](Screenshots/Application.png)
